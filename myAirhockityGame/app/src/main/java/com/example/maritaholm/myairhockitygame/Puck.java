@@ -22,6 +22,7 @@ public class Puck extends View {
     private static final String TAG = "Tag-AirHockity";
     private View mFrame;
     private double DEACCELATION = 0.975;
+    private float MAX_SPEED = 10000;
 
 
     public Puck(Context context, float x, float y, Bitmap bitmap, View frame, Game game) {
@@ -58,11 +59,27 @@ public class Puck extends View {
         this.yPos=y;
     }
 
-    public void setVelocity(float x, float y) {
+    public void IncreaseVelocity(float x, float y) {
+        float oldX = xVel;
+        float oldY = yVel;
         xVel += x;
         yVel += y;
+        if (getSpeed() >= MAX_SPEED) {
+            xVel = oldX;
+            yVel = oldY;
+        }
     }
 
+    public void setVelocity(float x, float y) {
+        float oldX = xVel;
+        float oldY = yVel;
+        xVel = x;
+        yVel = y;
+        if (getSpeed() >= MAX_SPEED) {
+            xVel = oldX;
+            yVel = oldY;
+        }
+    }
     public void resetVelocity(){
         xVel = 0;
         yVel = 0;
@@ -86,13 +103,13 @@ public class Puck extends View {
             xVel = xVel * (-1);
         }
         if (intersectsPlayer() != null) {
-            if (!(-0.000001 < xVel && xVel < 0.00001 && -0.00001 < yVel && yVel < 0.00001)){
+            /*if (!(-0.000001 < xVel && xVel < 0.00001 && -0.00001 < yVel && yVel < 0.00001)){
                 Player p = intersectsPlayer();
                 Vector newDircetion = getNewDirection(p);
                 double speed = getSpeed();
                 xVel = (float) newDircetion.getX() * (float) speed;
                 yVel = (float) newDircetion.getY() * (float) speed;
-            }
+            }*/
         }
 
         xPos += xVel/rate;

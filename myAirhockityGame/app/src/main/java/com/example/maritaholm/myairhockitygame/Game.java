@@ -178,7 +178,7 @@ public class Game extends Activity implements View.OnTouchListener {
                     float xVel = VelocityTrackerCompat.getXVelocity(tracker, event.getPointerId(i));
                     float yVel = VelocityTrackerCompat.getYVelocity(tracker, event.getPointerId(i));
 
-                    puck.setVelocity(xVel,yVel);
+                    puck.IncreaseVelocity(xVel, yVel);
                     return true;
                 }
             }
@@ -200,7 +200,7 @@ public class Game extends Activity implements View.OnTouchListener {
     public Dialog createDialog(final float tempXVel, final float tempYVel) {
 
 
-        puck.setVelocity(0,0);
+        puck.IncreaseVelocity(0, 0);
 
         // FLAG_PAUSE_PUCK = true;
 
@@ -217,14 +217,14 @@ public class Game extends Activity implements View.OnTouchListener {
                             finish();
                         } else if (which == 0) {
                             // FLAG_PAUSE_PUCK = false;
-                            puck.setVelocity(tempXVel, tempYVel);
+                            puck.IncreaseVelocity(tempXVel, tempYVel);
                         }
                     }
                 });
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                puck.setVelocity(tempXVel, tempYVel);
+                puck.IncreaseVelocity(tempXVel, tempYVel);
                 //FLAG_PAUSE_PUCK = false;
             }
         });
