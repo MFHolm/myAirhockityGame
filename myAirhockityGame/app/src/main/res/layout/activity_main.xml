@@ -1,0 +1,59 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:background="#A9F5A9">
+
+        <ImageView
+            android:paddingTop="50dp"
+            android:layout_width="350dp"
+            android:layout_height="260dp"
+            android:layout_gravity="center"
+            android:id="@+id/imageView"
+            android:src="@drawable/logo" />
+
+        <Button
+            android:layout_width="228dp"
+            android:layout_height="wrap_content"
+            android:text="Quick Game"
+            android:id="@+id/quickgamebutton"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.07"
+            android:layout_marginTop="2dp" />
+
+        <Button
+            android:layout_width="228dp"
+            android:layout_height="wrap_content"
+            android:text="Out of 3"
+            android:id="@+id/outof3button"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.07"
+            android:layout_marginTop="2dp"/>
+
+        <Button
+            android:layout_width="228dp"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:id="@+id/settingsbutton"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.07"
+            android:layout_marginTop="2dp"/>
+
+        <Button
+            android:layout_width="228dp"
+            android:layout_height="wrap_content"
+            android:text="Quit"
+            android:id="@+id/quitbutton"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.07"
+            android:layout_marginTop="2dp"/>
+    </LinearLayout>
+</RelativeLayout>
