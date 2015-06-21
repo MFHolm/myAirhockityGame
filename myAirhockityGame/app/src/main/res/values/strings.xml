@@ -2,6 +2,7 @@
     <string name="app_name">AirHockityGame</string>
     <string name="action_settings">Settings</string>
     <string name="gameClass">Game</string>
+    <string name="settingsClass">Settings</string>
     <color name="green">#A9F5A9</color>
     <string name="title_activity_settings">Settings</string>
     <string name="radio_three">Three</string>

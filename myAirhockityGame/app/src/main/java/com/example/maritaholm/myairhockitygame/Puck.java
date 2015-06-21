@@ -59,9 +59,8 @@ public class Puck extends View {
     }
 
     public void setVelocity(float x, float y) {
-        Log.d(TAG, "Set Velocity: (" + x + "," + y +")");
-        xVel = x;
-        yVel = y;
+        xVel += x;
+        yVel += y;
     }
 
     public void resetVelocity(){

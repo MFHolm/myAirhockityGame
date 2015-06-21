@@ -177,20 +177,8 @@ public class Game extends Activity implements View.OnTouchListener {
                 if (p.intersects(puck)) {
                     float xVel = VelocityTrackerCompat.getXVelocity(tracker, event.getPointerId(i));
                     float yVel = VelocityTrackerCompat.getYVelocity(tracker, event.getPointerId(i));
-                    Log.d(TAG, "intersects player ");
 
-                    Log.d(TAG, "player xVel: "+xVel );
-                    Log.d(TAG, "player yVel: "+yVel );
-                    Vector newDirection = puck.getNewDirection(p);
-                    double oldSpeed = puck.getSpeed();
-
-
-
-                    Log.d(TAG, "new x velocity: " + (newDirection.getX() * oldSpeed + xVel));
-                    Log.d(TAG, "new y velocity: " + (newDirection.getY() * oldSpeed + yVel));
-
-                    puck.setVelocity( (float) (newDirection.getX() * oldSpeed + xVel),
-                            (float) (newDirection.getY() * oldSpeed + yVel));
+                    puck.setVelocity(xVel,yVel);
                     return true;
                 }
             }

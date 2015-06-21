@@ -21,6 +21,12 @@
             android:label="@string/gameClass"
             android:screenOrientation="portrait" >
         </activity>
+
+        <activity
+            android:name=".Settings"
+            android:label="@string/settingsClass">
+        </activity>
+
     </application>
 
 </manifest>
