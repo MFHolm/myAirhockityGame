@@ -109,7 +109,7 @@ public class Game extends Activity implements View.OnTouchListener {
 
         // Creates a WorkerThread
 
-        ScheduledExecutorService executor = Executors
+        final ScheduledExecutorService executor = Executors
                 .newScheduledThreadPool(1);
 
         executor.scheduleWithFixedDelay(new Runnable() {
@@ -139,12 +139,14 @@ public class Game extends Activity implements View.OnTouchListener {
                         round++;
                         mField.resetScore();
                         resetPuck();
-                        if (mField.getBotWins() == 3) {
+                        if (mField.getBotWins() == 2) {
                             showWinnerDialog("Bottom");
+                            executor.shutdown();
+
                         }
                     } else {
-
                         showWinnerDialog("Bottom");
+                        executor.shutdown();
                     }
                 }
                 if (mField.getScoreTop() == pointsToWin) {
@@ -155,13 +157,13 @@ public class Game extends Activity implements View.OnTouchListener {
                         round++;
                         mField.resetScore();
                         resetPuck();
-                        if (mField.getTopWins() == 3) {
-                            ;
+                        if (mField.getTopWins() == 2) {
                             showWinnerDialog("Top");
+                            executor.shutdown();
                         }
                     } else {
-
                         showWinnerDialog("Top");
+                        executor.shutdown();
                     }
 
                 }
