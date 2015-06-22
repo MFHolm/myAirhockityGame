@@ -19,15 +19,10 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
-
-
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by MaritaHolm on 17/06/15.
- */
 public class Game extends Activity implements View.OnTouchListener {
 
     private ViewGroup mFrame;
@@ -41,15 +36,16 @@ public class Game extends Activity implements View.OnTouchListener {
     private static final int REFRESH_RATE = 40;
     private int PLAYER_RADIUS;
     private int PUCK_RADIUS;
-    //Game settings.
+    //Game settings
     private int pointsToWin;
     private String friction;
     private int round = 1;
 
+    //True for best out of 3, otherwise false
     //True for best out of 3, otherwise false.
+    public boolean isSoundEnabled;
     private Boolean mode;
 
-    private String theme;
     private Boolean bestOutOf3;
     private Player[] players;
 
@@ -62,7 +58,7 @@ public class Game extends Activity implements View.OnTouchListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Set up view.
+        //Set up view
         setContentView(R.layout.activity_game);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -72,15 +68,15 @@ public class Game extends Activity implements View.OnTouchListener {
         mFrame = (ViewGroup) findViewById(R.id.frame);
         mFrame.setOnTouchListener(this);
 
-        //Get settings.
+        //Get settings
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
         //Uses default if key is null
         pointsToWin = prefs.getInt("points", 3);
         friction = prefs.getString("friction", "some");
         bestOutOf3 = prefs.getBoolean("bestOutOf3", false);
-        theme = prefs.getString("theme", "orange and blue");
 
-        //Set up bitmaps to display players.
+        //Set up bitmaps to display players
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inScaled = false;
         mBitmap1 = BitmapFactory.decodeResource(getResources(), prefs.getInt("player1",R.drawable.orange_player), opts);
@@ -107,7 +103,7 @@ public class Game extends Activity implements View.OnTouchListener {
         //The puck
         mBitmap3 = BitmapFactory.decodeResource(getResources(), prefs.getInt("puck",R.drawable.grey_puck));
         puck = new Puck(getBaseContext(), (float) width / 2 - PUCK_RADIUS/2,
-                (float) height / 2 - 2* PUCK_RADIUS, mBitmap3, mFrame, this,this.friction, PUCK_RADIUS);
+                (float) height / 2 - 2* PUCK_RADIUS, mBitmap3, mFrame,this.friction, PUCK_RADIUS);
         mFrame.addView(puck);
         start();
 
@@ -118,39 +114,45 @@ public class Game extends Activity implements View.OnTouchListener {
     }
 
     public void start() {
-        //Set up audio.
+        //Set up audio
         final MediaPlayer playSoundOnGoal = MediaPlayer.create(getApplicationContext(),R.raw.ongoal);
         final MediaPlayer playSoundOnWin = MediaPlayer.create(getApplicationContext(),R.raw.cheer);
 
         // Creates a WorkerThread
-
         final ScheduledExecutorService executor = Executors
                 .newScheduledThreadPool(1);
 
         executor.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
-                //Moving the puck.
+                //Moving the puck
                 puck.move(REFRESH_RATE);
                 puck.deaccelerate();
                 puck.postInvalidate();
 
 
-                //Logic for incrementing goal score and determining game winner.
+                //Logic for incrementing goal score and determining game winner
                 if (puck.topGoal()) {
-                    vibrateOnGoal();
-                    playSoundOnGoal.start();
+                    if (prefs.getBoolean("sound",true)){
+                        vibrateOnGoal();
+                        playSoundOnGoal.start();
+                    }
                     mField.setScoreBot(mField.getScoreBot() + 1);
                     resetPuck();
                 }
                 if (puck.botGoal()) {
-                    vibrateOnGoal();
-                    playSoundOnGoal.start();
+                    if (prefs.getBoolean("sound",true)){
+                        vibrateOnGoal();
+                        playSoundOnGoal.start();
+                    }
                     mField.setScoreTop(mField.getScoreTop() + 1);
                     resetPuck();
                 }
                 if (mField.getScoreBot() == pointsToWin) {
-                    playSoundOnWin.start();
+                    if (prefs.getBoolean("sound",true)){
+                        playSoundOnWin.start();
+                    }
+
                     mField.setBotWins(mField.getBotWins() + 1);
                     if (bestOutOf3) {
                         mField.drawRoundWinner("bot", round);
@@ -168,7 +170,9 @@ public class Game extends Activity implements View.OnTouchListener {
                     }
                 }
                 if (mField.getScoreTop() == pointsToWin) {
-                    playSoundOnWin.start();
+                    if (prefs.getBoolean("sound",true)){
+                        playSoundOnWin.start();
+                    }
                     mField.setTopWins(mField.getTopWins() + 1);
                     if (bestOutOf3) {
                         mField.drawRoundWinner("top", round);
@@ -190,13 +194,12 @@ public class Game extends Activity implements View.OnTouchListener {
     }
     private void vibrateOnGoal(){
         Vibrator v = (Vibrator) getSystemService(getApplicationContext().VIBRATOR_SERVICE);
-        // Vibrate for 800 milliseconds
-        v.vibrate(800);
+        // Vibrate for 500 milliseconds
+        v.vibrate(500);
     }
 
-
+    //Check if any players intersect a given (x,y) position
     private boolean intersects(float x, float y) {
-        //Check if any players intersect on a given (x,y) position.
         for (Player p : players) {
             if (p.intersects(x, y)) {
                 return true;
@@ -205,8 +208,8 @@ public class Game extends Activity implements View.OnTouchListener {
         return false;
     }
 
+    //Gets the player that is that the given (x,y) coordinate (if any)
     private Player getPlayerAt(float x, float y) {
-        //Gets the player that is that the given (x,y) coordinate (if any).
         for (Player p : players) {
             if (p.intersects(x, y)) {
                 return p;
@@ -215,8 +218,8 @@ public class Game extends Activity implements View.OnTouchListener {
         return null;
     }
 
+    //Resets puck position
     private void resetPuck() {
-        //Resets puck position.
         puck.resetVelocity();
         puck.setX(width / 2 - 20);
         puck.setY(height / 2 - 2 * 32 - 10);
@@ -226,14 +229,14 @@ public class Game extends Activity implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        //Cycles through all players.
+        //Cycles through all players
         for (int i = 0; i < event.getPointerCount(); i++) {
             Player p = getPlayerAt(event.getX(i), event.getY(i));
 
             if (p != null) {
                 float x = event.getX(i);
                 float y = event.getY(i);
-                //The switch statement makes sure that the players can't move across the center line.
+                //The switch statement makes sure that the players can't move across the center line
                 switch (p.getName()) {
                     case "player1":
                         if (y >= (mFrame.getHeight() / 2) - p.getRadius() ) {
@@ -258,7 +261,7 @@ public class Game extends Activity implements View.OnTouchListener {
                 }
 
                 //Increases the velocity of the puck by the velocity of the player
-                //when it touches the puck.
+                //when it touches the puck
                 VelocityTracker tracker = VelocityTracker.obtain();
                 tracker.addMovement(event);
                 tracker.computeCurrentVelocity(500);
@@ -274,28 +277,24 @@ public class Game extends Activity implements View.OnTouchListener {
         return true;
     }
 
-    public Player[] getPlayers() {
-        return players;
-    }
-
+    //Creates a dialog if the back button is pressed
     @Override
     public void onBackPressed() {
-        //Creates a dialog if the back button is pressed.
         createDialog(puck.getXVel(),puck.getYVel()).show();
 
     }
 
     public Dialog createDialog(final float tempXVel, final float tempYVel) {
 
-        //Pauses the game by settings puck velocity to 0.
+        //Pauses the game by settings puck velocity to 0
         puck.setVelocity(0,0);
 
-        //Sets up the two button titles.
+        //Sets up the two button titles
         CharSequence[] choices = new CharSequence[2];
         choices[0] = "Resume";
         choices[1] = "Main Menu";
 
-        //Set up dialog.
+        //Set up dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(Game.this);
         builder.setTitle("PAUSED")
                 .setItems(choices, new DialogInterface.OnClickListener() {
@@ -308,7 +307,7 @@ public class Game extends Activity implements View.OnTouchListener {
                         }
                     }
                 });
-        //Resumes the game if the user presses outside of dialog box.
+        //Resumes the game if the user presses outside of dialog box
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -318,8 +317,8 @@ public class Game extends Activity implements View.OnTouchListener {
         return builder.create();
     }
 
+    //Show winner dialog
     public void showWinnerDialog(String winner){
-        //Show winner dialog.
         DialogFragment mWinnerDialog = WinnerDialog.newInstance(winner);
         mWinnerDialog.show(getFragmentManager(), "dialog");
     }
