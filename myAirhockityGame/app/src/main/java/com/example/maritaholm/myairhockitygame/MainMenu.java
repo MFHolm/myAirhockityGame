@@ -24,10 +24,7 @@ public class MainMenu extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        prefs.edit().putBoolean("sound",true);
-        prefs.edit().putInt("points", 3).commit();
-        prefs.edit().putString("friction", "some").commit();
-        prefs.edit().putString("theme", "orange and blue").apply();
+
 
         //Sets up shared preferences and puts in default setting values
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
