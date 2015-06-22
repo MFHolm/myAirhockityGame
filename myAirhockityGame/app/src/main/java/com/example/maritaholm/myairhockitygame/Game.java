@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.Canvas;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -51,13 +53,19 @@ public class Game extends Activity implements View.OnTouchListener {
     private static final String TAG = "Tag-AirHockity";
     private Player[] players;
     SharedPreferences prefs = null;
+    int width;
+    int height;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_game);
-
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        width = size.x;
+        height = size.y;
         // Set up user interface
 
         mFrame = (ViewGroup) findViewById(R.id.frame);
@@ -68,35 +76,27 @@ public class Game extends Activity implements View.OnTouchListener {
         mode = prefs.getBoolean("mode",false);
 
         mField = new Field(getApplicationContext(),mFrame);
-        mField.setScoreBot(0);
-        mField.setScoreBot(0);
-        mField.setTopWins(0);
-        mField.setBotWins(0);
         mFrame.addView(mField);
 
         players = new Player[2];
 
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inScaled = false;
+        //Player 1
         mBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.player1, opts);
-        player1 = new Player("player1",getBaseContext(), 400,300, mBitmap1);
+        player1 = new Player("player1",getApplicationContext(), width/2 - 128,128, mBitmap1);
         players[0]=player1;
         mFrame.addView(player1);
-
+        //Player 2
         mBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.player2, opts);
-        player2 = new Player("player2",getBaseContext(), 400,800, mBitmap2);
+        player2 = new Player("player2", getApplicationContext(), width/2 - 128,height - 3 * 128, mBitmap2);
         players[1]=player2;
         mFrame.addView(player2);
-
+        //The puck
         mBitmap3 = BitmapFactory.decodeResource(getResources(), R.drawable.puck);
-        puck = new Puck(getBaseContext(), 350, 600, mBitmap3, mFrame, this,this.friction);
+        puck = new Puck(getBaseContext(), (float) width / 2 - 20, (float) height / 2 - 2 * 32 - 10, mBitmap3, mFrame, this,this.friction);
         mFrame.addView(puck);
-
-
-        Log.d("Puck",puck.getX()+" and "+puck.getY());
-        start(puck, mField, mFrame);
-
-
+        start();
     }
     @Override
     protected void onResume() {
@@ -123,15 +123,13 @@ public class Game extends Activity implements View.OnTouchListener {
                     vibrateOnGoal();
                     playSoundOnGoal.start();
                     mField.setScoreBot(mField.getScoreBot() + 1);
-                    resetPlayerPuck();
-
+                    resetPuck();
                 }
                 if (puck.botGoal()) {
                     vibrateOnGoal();
                     playSoundOnGoal.start();
                     mField.setScoreTop(mField.getScoreTop() + 1);
-                    resetPlayerPuck();
-
+                    resetPuck();
                 }
                 if (mField.getScoreBot() == pointsToWin) {
                     playSoundOnWin.start();
@@ -184,17 +182,10 @@ public class Game extends Activity implements View.OnTouchListener {
         return null;
     }
 
-    private void resetPlayerPuck(){
+    private void resetPuck(){
         puck.resetVelocity();
-        puck.setX(mFrame.getRight() / 2);
-        puck.setY(mFrame.getBottom() / 2);
-        player1.moveTo(400,300);
-        player2.moveTo(400,800);
-
-        /*player1.moveTo(mFrame.getRight() / 2, mFrame.getBottom() / 4);
-        player2.moveTo(mFrame.getRight()/2,mFrame.getBottom()*(3/4));*/
-
-
+        puck.setX(width / 2 - 20);
+        puck.setY(height / 2 - 2 * 32 - 10);
     }
 
 
@@ -208,10 +199,7 @@ public class Game extends Activity implements View.OnTouchListener {
                 float y = event.getY(i);
                 switch (p.getName()) {
                     case "player1":
-                        Log.d(TAG, "player 1");
-                        if (y >= (mFrame.getHeight() / 2)-p.getRadius() ) {
-                            Log.d(TAG, "over the line");
-                            Log.d(TAG, ""+y);
+                        if (y >= (mFrame.getHeight() / 2) - p.getRadius() ) {
 
                             p.moveTo(x, (float) ((mFrame.getHeight() / 2)-p.getRadius()));
                         }
@@ -220,10 +208,7 @@ public class Game extends Activity implements View.OnTouchListener {
                         }
                         break;
                     case "player2":
-                        Log.d(TAG, "player 2");
                         if (y <= (mFrame.getHeight() / 2)+p.getRadius()) {
-                            Log.d(TAG, "over the line");
-                            Log.d(TAG, ""+y);
 
                             p.moveTo(x, (float) ((mFrame.getHeight() / 2)+p.getRadius()));
                         }
@@ -234,8 +219,6 @@ public class Game extends Activity implements View.OnTouchListener {
                     default:
                         break;
                 }
-
-                //p.moveTo(x, y);
                 VelocityTracker tracker = VelocityTracker.obtain();
                 tracker.addMovement(event);
                 tracker.computeCurrentVelocity(500);

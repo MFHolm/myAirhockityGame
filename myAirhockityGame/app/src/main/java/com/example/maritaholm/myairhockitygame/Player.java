@@ -17,11 +17,10 @@ public class Player extends View {
     private float xPos;
     private float yPos;
     private float radius;
-    Bitmap mScaledBitmap;
-
     private String name;
-
+    Bitmap mScaledBitmap;
     private static final String TAG = "Tag-AirHockity";
+
     public Player(String name, Context context, float x, float y, Bitmap bitmap) {
         super(context);
         this.name = name;
@@ -69,11 +68,7 @@ public class Player extends View {
     }
 
     public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        return this.name;
     }
 
 
