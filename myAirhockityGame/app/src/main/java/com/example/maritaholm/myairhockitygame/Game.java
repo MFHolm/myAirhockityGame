@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -103,6 +104,8 @@ public class Game extends Activity implements View.OnTouchListener {
     }
 
     public void start(final Puck puck, final Field mField,final ViewGroup mFrame) {
+        final MediaPlayer playSoundOnGoal = MediaPlayer.create(getApplicationContext(),R.raw.ongoal);
+        final MediaPlayer playSoundOnWin = MediaPlayer.create(getApplicationContext(),R.raw.cheer);
 
         // Creates a WorkerThread
 
@@ -117,18 +120,21 @@ public class Game extends Activity implements View.OnTouchListener {
                 puck.postInvalidate();
 
                 if (puck.topGoal()) {
-                   // vibrateOnGoal();
+                    vibrateOnGoal();
+                    playSoundOnGoal.start();
                     mField.setScoreBot(mField.getScoreBot() + 1);
                     resetPlayerPuck();
 
                 }
                 if (puck.botGoal()) {
-                   // vibrateOnGoal();
+                    vibrateOnGoal();
+                    playSoundOnGoal.start();
                     mField.setScoreTop(mField.getScoreTop() + 1);
                     resetPlayerPuck();
 
                 }
                 if (mField.getScoreBot() == pointsToWin) {
+                    playSoundOnWin.start();
                     mField.setBotWins(mField.getBotWins() + 1);
                     if (mode) {
                         if (mField.getBotWins() == 3) {
@@ -139,6 +145,7 @@ public class Game extends Activity implements View.OnTouchListener {
                     }
                 }
                 if (mField.getScoreTop() == pointsToWin) {
+                    playSoundOnWin.start();
                     mField.setTopWins(mField.getTopWins() + 1);
                     if (mode) {
                         if (mField.getTopWins() == 3) {
