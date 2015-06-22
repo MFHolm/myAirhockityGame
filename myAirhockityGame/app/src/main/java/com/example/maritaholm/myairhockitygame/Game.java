@@ -69,15 +69,15 @@ public class Game extends Activity implements View.OnTouchListener {
         height = size.y;
         mFrame = (ViewGroup) findViewById(R.id.frame);
         mFrame.setOnTouchListener(this);
-        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         pointsToWin = prefs.getInt("points", 0);
         friction = prefs.getString("friction", null);
         mode = prefs.getBoolean("mode",false);
 
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inScaled = false;
-        mBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.player1, opts);
-        mBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.player2, opts);
+        mBitmap1 = BitmapFactory.decodeResource(getResources(), prefs.getInt("player1",R.drawable.orange_player), opts);
+        mBitmap2 = BitmapFactory.decodeResource(getResources(), prefs.getInt("player2",R.drawable.blue_player), opts);
 
         mField = new Field(getApplicationContext(),mFrame,mBitmap1,mBitmap2);
         mFrame.addView(mField);
@@ -88,15 +88,18 @@ public class Game extends Activity implements View.OnTouchListener {
         player1 = new Player("player1",getApplicationContext(), width/2 - 128,128, mBitmap1);
         players[0]=player1;
         mFrame.addView(player1);
+
         //Player 2
         player2 = new Player("player2", getApplicationContext(), width/2 - 128,height - 3 * 128, mBitmap2);
         players[1]=player2;
         mFrame.addView(player2);
+
         //The puck
-        mBitmap3 = BitmapFactory.decodeResource(getResources(), R.drawable.puck);
+        mBitmap3 = BitmapFactory.decodeResource(getResources(), prefs.getInt("puck",R.drawable.grey_puck));
         puck = new Puck(getBaseContext(), (float) width / 2 - 20, (float) height / 2 - 2 * 32 - 10, mBitmap3, mFrame, this,this.friction);
         mFrame.addView(puck);
         start();
+
     }
     @Override
     protected void onResume() {
@@ -297,7 +300,7 @@ public class Game extends Activity implements View.OnTouchListener {
 
     public void showWinnerDialog(String winner){
         DialogFragment mWinnerDialog = WinnerDialog.newInstance(winner);
-        mWinnerDialog.show(getFragmentManager(),"dialog");
+        mWinnerDialog.show(getFragmentManager(), "dialog");
     }
 
 

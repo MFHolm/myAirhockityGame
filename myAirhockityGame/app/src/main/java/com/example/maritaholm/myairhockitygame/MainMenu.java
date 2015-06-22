@@ -29,7 +29,7 @@ public class MainMenu extends Activity {
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         prefs.edit().putInt("points", 3).commit();
         prefs.edit().putString("friction", "some").commit();
-
+        prefs.edit().putString("theme", "orange and blue").apply();
 
         final MediaPlayer playSoundButtonTouch = MediaPlayer.create(getApplicationContext(),R.raw.menutouch);
         final Button startButton = (Button) findViewById(R.id.quickgamebutton);
