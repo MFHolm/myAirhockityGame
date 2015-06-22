@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Canvas;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -105,6 +106,8 @@ public class Game extends Activity implements View.OnTouchListener {
     }
 
     public void start() {
+        final MediaPlayer playSoundOnGoal = MediaPlayer.create(getApplicationContext(),R.raw.ongoal);
+        final MediaPlayer playSoundOnWin = MediaPlayer.create(getApplicationContext(),R.raw.cheer);
 
         // Creates a WorkerThread
 
@@ -114,23 +117,24 @@ public class Game extends Activity implements View.OnTouchListener {
         executor.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
-
                 puck.move(REFRESH_RATE);
-
                 puck.deaccelerate();
                 puck.postInvalidate();
 
                 if (puck.topGoal()) {
                     vibrateOnGoal();
+                    playSoundOnGoal.start();
                     mField.setScoreBot(mField.getScoreBot() + 1);
                     resetPuck();
                 }
                 if (puck.botGoal()) {
                     vibrateOnGoal();
+                    playSoundOnGoal.start();
                     mField.setScoreTop(mField.getScoreTop() + 1);
                     resetPuck();
                 }
                 if (mField.getScoreBot() == pointsToWin) {
+                    playSoundOnWin.start();
                     mField.setBotWins(mField.getBotWins() + 1);
                     if (mode) {
                         mField.drawRoundWinner("bot", round);
@@ -147,6 +151,7 @@ public class Game extends Activity implements View.OnTouchListener {
                     }
                 }
                 if (mField.getScoreTop() == pointsToWin) {
+                    playSoundOnWin.start();
                     mField.setTopWins(mField.getTopWins() + 1);
                     if (mode) {
                         mField.drawRoundWinner("top", round);
@@ -171,6 +176,7 @@ public class Game extends Activity implements View.OnTouchListener {
         // Vibrate for 800 milliseconds
         v.vibrate(800);
     }
+
 
     private boolean intersects(float x, float y) {
         for (Player p : players) {

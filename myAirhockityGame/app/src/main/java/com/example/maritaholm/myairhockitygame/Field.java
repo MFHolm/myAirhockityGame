@@ -114,8 +114,8 @@ public class Field extends View {
     }
 
     public void resetScore(){
-        this.scoreBot=0;
-        this.scoreTop=0;
+        this.scoreBot = 0;
+        this.scoreTop = 0;
 
     }
 

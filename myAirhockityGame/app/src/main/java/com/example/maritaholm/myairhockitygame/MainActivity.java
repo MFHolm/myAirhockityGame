@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -27,26 +28,20 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         prefs.edit().putInt("points", 3).commit();
-        prefs.edit().putString("friction","some").commit();
+        prefs.edit().putString("friction", "some").commit();
 
 
-
+        final MediaPlayer playSoundButtonTouch = MediaPlayer.create(getApplicationContext(),R.raw.menutouch);
         final Button startButton = (Button) findViewById(R.id.quickgamebutton);
-        startButton.setBackgroundColor(Color.RED);
-        startButton.setTextColor(Color.WHITE);
         final Button outof3Button = (Button) findViewById(R.id.outof3button);
-        outof3Button.setBackgroundColor(Color.RED);
-        outof3Button.setTextColor(Color.WHITE);
         final Button settingsButton = (Button) findViewById(R.id.settingsbutton);
-        settingsButton.setBackgroundColor(Color.RED);
-        settingsButton.setTextColor(Color.WHITE);
         final Button quitButton = (Button) findViewById(R.id.quitbutton);
-        quitButton.setBackgroundColor(Color.RED);
-        quitButton.setTextColor(Color.WHITE);
+
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playSoundButtonTouch.start();
                 prefs.edit().putBoolean("mode", false).commit();
                 Intent quickGame = new Intent(MainActivity.this, Game.class);
                 startActivity(quickGame);
@@ -56,6 +51,7 @@ public class MainActivity extends Activity {
         outof3Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playSoundButtonTouch.start();
                 prefs.edit().putBoolean("mode", true).commit();
                 Log.d("test",String.valueOf(prefs.getBoolean("mode",true)));
                 Intent outof3Game = new Intent(MainActivity.this, Game.class);
@@ -68,6 +64,7 @@ public class MainActivity extends Activity {
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playSoundButtonTouch.start();
                 Intent settings = new Intent(MainActivity.this,Settings.class);
                 startActivity(settings);
             }
