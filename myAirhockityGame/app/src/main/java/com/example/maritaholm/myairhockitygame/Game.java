@@ -47,6 +47,8 @@ public class Game extends Activity implements View.OnTouchListener {
     private Field mField;
     private Puck puck;
     private static final int REFRESH_RATE = 40;
+    private int PLAYER_RADIUS;
+    private int PUCK_RADIUS;
     private int pointsToWin;
     private String friction;
     private Boolean mode;
@@ -84,19 +86,23 @@ public class Game extends Activity implements View.OnTouchListener {
 
         players = new Player[2];
 
+        PLAYER_RADIUS = width/10;
+        PUCK_RADIUS = width/30;
+
         //Player 1
-        player1 = new Player("player1",getApplicationContext(), width/2 - 128,128, mBitmap1);
+        player1 = new Player("player1",getApplicationContext(), width/2 - PLAYER_RADIUS,PLAYER_RADIUS, mBitmap1, PLAYER_RADIUS);
         players[0]=player1;
         mFrame.addView(player1);
 
         //Player 2
-        player2 = new Player("player2", getApplicationContext(), width/2 - 128,height - 3 * 128, mBitmap2);
+        player2 = new Player("player2", getApplicationContext(), width/2 - PLAYER_RADIUS,height - 3 * PLAYER_RADIUS, mBitmap2,PLAYER_RADIUS);
         players[1]=player2;
         mFrame.addView(player2);
 
         //The puck
         mBitmap3 = BitmapFactory.decodeResource(getResources(), prefs.getInt("puck",R.drawable.grey_puck));
-        puck = new Puck(getBaseContext(), (float) width / 2 - 20, (float) height / 2 - 2 * 32 - 10, mBitmap3, mFrame, this,this.friction);
+        puck = new Puck(getBaseContext(), (float) width / 2 - PUCK_RADIUS/2,
+                (float) height / 2 - 2* PUCK_RADIUS, mBitmap3, mFrame, this,this.friction, PUCK_RADIUS);
         mFrame.addView(puck);
         start();
 

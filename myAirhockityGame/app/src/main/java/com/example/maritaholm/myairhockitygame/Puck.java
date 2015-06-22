@@ -28,13 +28,13 @@ public class Puck extends View {
     private float MAX_SPEED = 10000;
 
 
-    public Puck(Context context, float x, float y, Bitmap bitmap, View frame,Game game,String friction) {
+    public Puck(Context context, float x, float y, Bitmap bitmap, View frame,Game game,String friction, int radius) {
         super(context);
         this.xPos = x;
         this.yPos = y;
         this.xVel = 0;
         this.yVel = 0;
-        this.radius = 32;
+        this.radius = radius;
         this.mFrame = frame;
         this.game = game;
         this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2 * (int)radius, 2 * (int)radius, false);

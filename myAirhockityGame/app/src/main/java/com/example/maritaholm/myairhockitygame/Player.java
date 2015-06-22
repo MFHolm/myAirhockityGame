@@ -21,12 +21,12 @@ public class Player extends View {
     Bitmap mScaledBitmap;
     private static final String TAG = "Tag-AirHockity";
 
-    public Player(String name, Context context, float x, float y, Bitmap bitmap) {
+    public Player(String name, Context context, float x, float y, Bitmap bitmap,int radius) {
         super(context);
         this.name = name;
         this.xPos = x;
         this.yPos = y;
-        this.radius = 128;
+        this.radius = radius;
         this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2 * (int)radius, 2 * (int)radius, false);
     }
 
