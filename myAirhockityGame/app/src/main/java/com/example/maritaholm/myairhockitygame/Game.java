@@ -51,6 +51,7 @@ public class Game extends Activity implements View.OnTouchListener {
     private Boolean mode;
     private static final String TAG = "Tag-AirHockity";
     private Player[] players;
+    private int round = 1;
     SharedPreferences prefs = null;
     int width;
     int height;
@@ -74,20 +75,21 @@ public class Game extends Activity implements View.OnTouchListener {
         friction = prefs.getString("friction", null);
         mode = prefs.getBoolean("mode",false);
 
-        mField = new Field(getApplicationContext(),mFrame);
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inScaled = false;
+        mBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.player1, opts);
+        mBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.player2, opts);
+
+        mField = new Field(getApplicationContext(),mFrame,mBitmap1,mBitmap2);
         mFrame.addView(mField);
 
         players = new Player[2];
 
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inScaled = false;
         //Player 1
-        mBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.player1, opts);
         player1 = new Player("player1",getApplicationContext(), width/2 - 128,128, mBitmap1);
         players[0]=player1;
         mFrame.addView(player1);
         //Player 2
-        mBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.player2, opts);
         player2 = new Player("player2", getApplicationContext(), width/2 - 128,height - 3 * 128, mBitmap2);
         players[1]=player2;
         mFrame.addView(player2);
@@ -119,33 +121,45 @@ public class Game extends Activity implements View.OnTouchListener {
                 puck.postInvalidate();
 
                 if (puck.topGoal()) {
-                    // vibrateOnGoal();
+                    vibrateOnGoal();
                     mField.setScoreBot(mField.getScoreBot() + 1);
                     resetPuck();
                 }
                 if (puck.botGoal()) {
-                    // vibrateOnGoal();
+                    vibrateOnGoal();
                     mField.setScoreTop(mField.getScoreTop() + 1);
                     resetPuck();
                 }
                 if (mField.getScoreBot() == pointsToWin) {
                     mField.setBotWins(mField.getBotWins() + 1);
                     if (mode) {
+                        mField.drawRoundWinner("bot", round);
+                        round++;
+                        mField.resetScore();
+                        resetPuck();
                         if (mField.getBotWins() == 3) {
-                            createWinnerDialog("Bottom").show();
+                            //createWinnerDialog("Bottom").show();
+                            showWinnerDialog("Bottom");
                         }
                     } else {
-                        createWinnerDialog("Bottom").show();
+                        //createWinnerDialog("Bottom").show();
+                        showWinnerDialog("Bottom");
                     }
                 }
                 if (mField.getScoreTop() == pointsToWin) {
                     mField.setTopWins(mField.getTopWins() + 1);
                     if (mode) {
+                        mField.drawRoundWinner("top", round);
+                        round++;
+                        mField.resetScore();
+                        resetPuck();
                         if (mField.getTopWins() == 3) {
-                            createWinnerDialog("Top").show();
+                            //createWinnerDialog("Top").show();
+                            showWinnerDialog("Top");
                         }
                     } else {
-                        createWinnerDialog("Top").show();
+                        //createWinnerDialog("Top").show();'
+                        showWinnerDialog("Top");
                     }
 
                 }
@@ -176,10 +190,11 @@ public class Game extends Activity implements View.OnTouchListener {
         return null;
     }
 
-    private void resetPuck(){
+    private void resetPuck() {
         puck.resetVelocity();
         puck.setX(width / 2 - 20);
         puck.setY(height / 2 - 2 * 32 - 10);
+        mFrame.postInvalidate();
     }
 
 
@@ -275,7 +290,12 @@ public class Game extends Activity implements View.OnTouchListener {
         return builder.create();
     }
 
-    public AlertDialog createWinnerDialog(final String winner) {
+    public void showWinnerDialog(String winner){
+        DialogFragment mWinnerDialog = WinnerDialog.newInstance(winner);
+        mWinnerDialog.show(getFragmentManager(),"dialog");
+    }
+
+    /*public AlertDialog createWinnerDialog(final String winner) {
         CharSequence[] choice = new CharSequence[2];
         choice[0] = "Play Again";
         choice[1] = "Main Menu";
@@ -300,7 +320,7 @@ public class Game extends Activity implements View.OnTouchListener {
             }
         });
         return builder.create();
-    }
+    }*/
 
 
 }

@@ -57,6 +57,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 prefs.edit().putBoolean("mode", true).commit();
+                Log.d("test",String.valueOf(prefs.getBoolean("mode",true)));
                 Intent outof3Game = new Intent(MainActivity.this, Game.class);
                 startActivity(outof3Game);
 
