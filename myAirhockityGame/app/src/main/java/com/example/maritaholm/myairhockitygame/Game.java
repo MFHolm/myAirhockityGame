@@ -272,7 +272,6 @@ public class Game extends Activity implements View.OnTouchListener {
 
 
         puck.setVelocity(0,0);
-        // FLAG_PAUSE_PUCK = true;
 
         CharSequence[] choices = new CharSequence[2];
         choices[0] = "Resume";
@@ -286,7 +285,6 @@ public class Game extends Activity implements View.OnTouchListener {
                         if (which == 1) {
                             finish();
                         } else if (which == 0) {
-                            // FLAG_PAUSE_PUCK = false;
                             puck.setVelocity(tempXVel, tempYVel);
                         }
                     }
@@ -295,7 +293,6 @@ public class Game extends Activity implements View.OnTouchListener {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 puck.setVelocity(tempXVel, tempYVel);
-                //FLAG_PAUSE_PUCK = false;
             }
         });
         return builder.create();
