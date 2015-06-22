@@ -39,7 +39,7 @@ public class Field extends View {
     @Override
     protected synchronized void onDraw(Canvas canvas) {
 
-        mPaint.setColor(Color.YELLOW);
+        mPaint.setColor(Color.DKGRAY);
         //right
         canvas.drawRect(mFrame.getLeft(), mFrame.getTop(), mFrame.getLeft() + 10, mFrame.getBottom(), mPaint);
 
