@@ -51,7 +51,6 @@ public class Game extends Activity implements View.OnTouchListener {
 
     private String theme;
     private Boolean bestOutOf3;
-    private static final String TAG = "Tag-AirHockity";
     private Player[] players;
 
     SharedPreferences prefs = null;
