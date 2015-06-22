@@ -23,9 +23,15 @@ public class MainMenu extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        prefs.edit().putBoolean("sound",true);
+        prefs.edit().putInt("points", 3).commit();
+        prefs.edit().putString("friction", "some").commit();
+        prefs.edit().putString("theme", "orange and blue").apply();
 
         //Sets up shared preferences and puts in default setting values
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
         final MediaPlayer playSoundButtonTouch = MediaPlayer.create(getApplicationContext(),R.raw.menutouch);
 
         //Sets up buttons
@@ -37,7 +43,9 @@ public class MainMenu extends Activity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playSoundButtonTouch.start();
+                if (prefs.getBoolean("sound",true)){
+                    playSoundButtonTouch.start();
+                }
                 Intent quickGame = new Intent(MainMenu.this, Game.class);
                 startActivity(quickGame);
             }
@@ -51,6 +59,15 @@ public class MainMenu extends Activity {
                 prefs.edit().putBoolean("bestOutOf3", true).apply();
                 Intent outOf3Game = new Intent(MainMenu.this, Game.class);
                 startActivity(outOf3Game);
+                //Sets the bestOutOf3 mode to true to identify that a best out of 3 game is started.
+                prefs.edit().putBoolean("bestOutOf3", true).commit();
+                if (prefs.getBoolean("sound",true)){
+                    playSoundButtonTouch.start();
+                }
+                Intent outof3Game = new Intent(MainMenu.this, Game.class);
+                startActivity(outof3Game);
+
+
             }
         });
 
@@ -59,7 +76,9 @@ public class MainMenu extends Activity {
             public void onClick(View v) {
                 //For starting settings
                 Intent settings = new Intent(MainMenu.this,Settings.class);
-                playSoundButtonTouch.start();
+                if (prefs.getBoolean("sound",true)){
+                    playSoundButtonTouch.start();
+                }
                 startActivity(settings);
             }
         });

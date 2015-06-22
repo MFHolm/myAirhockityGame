@@ -43,6 +43,9 @@ public class Game extends Activity implements View.OnTouchListener {
 
     // Creates a WorkerThread
     private ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    
+    public boolean isSoundEnabled;
+    private Boolean mode;
 
     //True for best out of 3, otherwise false
     private Boolean bestOutOf3;
@@ -74,6 +77,7 @@ public class Game extends Activity implements View.OnTouchListener {
         pointsToWin = prefs.getInt("points", 3);
         friction = prefs.getString("friction", "some");
         bestOutOf3 = prefs.getBoolean("bestOutOf3", false);
+        isSoundEnabled = prefs.getBoolean("sound",false);
 
         //Set up bitmaps to display players
         BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -129,19 +133,26 @@ public class Game extends Activity implements View.OnTouchListener {
 
                 //Logic for incrementing goal score and determining game winner
                 if (puck.topGoal()) {
-                    vibrateOnGoal();
-                    playSoundOnGoal.start();
+                    if (isSoundEnabled){
+                        vibrateOnGoal();
+                        playSoundOnGoal.start();
+                    }
                     mField.setScoreBot(mField.getScoreBot() + 1);
                     resetPuck();
                 }
                 if (puck.botGoal()) {
-                    vibrateOnGoal();
-                    playSoundOnGoal.start();
+                    if (isSoundEnabled){
+                        vibrateOnGoal();
+                        playSoundOnGoal.start();
+                    }
                     mField.setScoreTop(mField.getScoreTop() + 1);
                     resetPuck();
                 }
                 if (mField.getScoreBot() == pointsToWin) {
-                    playSoundOnWin.start();
+                    if (isSoundEnabled){
+                        playSoundOnWin.start();
+                    }
+
                     mField.setBotWins(mField.getBotWins() + 1);
                     if (bestOutOf3) {
                         mField.drawRoundWinner("bot", round);
@@ -159,7 +170,9 @@ public class Game extends Activity implements View.OnTouchListener {
                     }
                 }
                 if (mField.getScoreTop() == pointsToWin) {
-                    playSoundOnWin.start();
+                    if (isSoundEnabled){
+                        playSoundOnWin.start();
+                    }
                     mField.setTopWins(mField.getTopWins() + 1);
                     if (bestOutOf3) {
                         mField.drawRoundWinner("top", round);

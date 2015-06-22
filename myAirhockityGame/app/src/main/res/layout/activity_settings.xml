@@ -22,7 +22,33 @@
             android:textSize="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sound and vibration"
+            android:textSize="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp" />
+
+        <RadioGroup
+            android:id="@+id/sound_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" >
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="On"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/sound_on"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Off"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/sound_off" />
+        </RadioGroup>
 
         <TextView
             android:layout_gravity="center_horizontal"
@@ -31,6 +57,8 @@
             android:text="Points to win"
             android:textSize="20dp"
             android:layout_marginTop="0dp" />
+
+
 
         <RadioGroup
             android:id="@+id/points_group"
@@ -127,10 +155,12 @@
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Kitten"
+                android:text="Kittens"
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/radio_kitten"/>
         </RadioGroup>
+
+
 
 
         <Button
