@@ -75,6 +75,7 @@ public class Game extends Activity implements View.OnTouchListener {
         pointsToWin = prefs.getInt("points", 3);
         friction = prefs.getString("friction", "some");
         bestOutOf3 = prefs.getBoolean("bestOutOf3", false);
+        isSoundEnabled = prefs.getBoolean("sound",false);
 
         //Set up bitmaps to display players
         BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -133,7 +134,7 @@ public class Game extends Activity implements View.OnTouchListener {
 
                 //Logic for incrementing goal score and determining game winner
                 if (puck.topGoal()) {
-                    if (prefs.getBoolean("sound",true)){
+                    if (isSoundEnabled){
                         vibrateOnGoal();
                         playSoundOnGoal.start();
                     }
@@ -141,7 +142,7 @@ public class Game extends Activity implements View.OnTouchListener {
                     resetPuck();
                 }
                 if (puck.botGoal()) {
-                    if (prefs.getBoolean("sound",true)){
+                    if (isSoundEnabled){
                         vibrateOnGoal();
                         playSoundOnGoal.start();
                     }
@@ -149,7 +150,7 @@ public class Game extends Activity implements View.OnTouchListener {
                     resetPuck();
                 }
                 if (mField.getScoreBot() == pointsToWin) {
-                    if (prefs.getBoolean("sound",true)){
+                    if (isSoundEnabled){
                         playSoundOnWin.start();
                     }
 
@@ -170,7 +171,7 @@ public class Game extends Activity implements View.OnTouchListener {
                     }
                 }
                 if (mField.getScoreTop() == pointsToWin) {
-                    if (prefs.getBoolean("sound",true)){
+                    if (isSoundEnabled){
                         playSoundOnWin.start();
                     }
                     mField.setTopWins(mField.getTopWins() + 1);

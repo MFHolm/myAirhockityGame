@@ -16,7 +16,6 @@ import android.widget.RadioGroup;
 
 public class Settings extends Activity {
 
-    private static final String TAG = "Tag-AirHockity";
     SharedPreferences prefs = null;
 
     @Override
@@ -98,7 +97,7 @@ public class Settings extends Activity {
                 }
             }
         });
-
+        // Listens to changes to theme radio group
         themeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -127,6 +126,7 @@ public class Settings extends Activity {
         });
 
         // Returns to main menu
+
         retButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,7 +135,7 @@ public class Settings extends Activity {
         });
     }
 
-    // Updates which radio button is checked
+    // Selects radiobuttons depending on already defined settings
     // Gets which button is selected from prefs
     public void setButtons(RadioGroup soundGroup,RadioGroup pointsGroup,RadioGroup frictionGroup, RadioGroup themeGroup,
                            int set,String friction, String theme, Boolean isSoundOn){
