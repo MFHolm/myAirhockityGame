@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.Button;
 
 
-public class MainActivity extends Activity {
+public class MainMenu extends Activity {
 
     private int points = 3;
     static final int SETTINGS_REQUEST = 1;
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 playSoundButtonTouch.start();
                 prefs.edit().putBoolean("mode", false).commit();
-                Intent quickGame = new Intent(MainActivity.this, Game.class);
+                Intent quickGame = new Intent(MainMenu.this, Game.class);
                 startActivity(quickGame);
             }
         });
@@ -53,8 +53,8 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 playSoundButtonTouch.start();
                 prefs.edit().putBoolean("mode", true).commit();
+                Intent outof3Game = new Intent(MainMenu.this, Game.class);
                 Log.d("test",String.valueOf(prefs.getBoolean("mode",true)));
-                Intent outof3Game = new Intent(MainActivity.this, Game.class);
                 startActivity(outof3Game);
 
 
@@ -64,8 +64,8 @@ public class MainActivity extends Activity {
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent settings = new Intent(MainMenu.this,Settings.class);
                 playSoundButtonTouch.start();
-                Intent settings = new Intent(MainActivity.this,Settings.class);
                 startActivity(settings);
             }
         });

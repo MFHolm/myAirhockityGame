@@ -67,8 +67,6 @@ public class Game extends Activity implements View.OnTouchListener {
         display.getSize(size);
         width = size.x;
         height = size.y;
-        // Set up user interface
-
         mFrame = (ViewGroup) findViewById(R.id.frame);
         mFrame.setOnTouchListener(this);
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -142,7 +140,6 @@ public class Game extends Activity implements View.OnTouchListener {
                         mField.resetScore();
                         resetPuck();
                         if (mField.getBotWins() == 3) {
-                            /
                             showWinnerDialog("Bottom");
                         }
                     } else {
