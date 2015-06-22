@@ -21,7 +21,6 @@ public class Field extends View {
     private int scoreBot = 0;
     private int topWins = 0;
     private int botWins = 0;
-    private static final String TAG = "Score";
 
     public Field(Context context, View mFrame) {
         super(context);
@@ -58,7 +57,6 @@ public class Field extends View {
         canvas.drawText(Integer.toString(scoreBot), mFrame.getRight() / 2, (mFrame.getBottom() / 2)+100, mPaint);
 
         //top score
-        Log.d(TAG,"WOWOWOW " + Integer.toString(scoreBot)+ " more wow: " + Integer.toString(scoreTop));
         canvas.rotate(180,mFrame.getRight() / 2, (mFrame.getBottom() / 2)-100);
         canvas.drawText(Integer.toString(scoreTop),((mFrame.getRight() / 2)-25), (mFrame.getBottom() / 2)-100, mPaint);
 
