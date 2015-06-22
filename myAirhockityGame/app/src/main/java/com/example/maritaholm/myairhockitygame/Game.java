@@ -4,30 +4,22 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.graphics.Canvas;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.view.VelocityTrackerCompat;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.example.maritaholm.myairhockitygame.Player;
-import com.example.maritaholm.myairhockitygame.Puck;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -51,7 +43,8 @@ public class Game extends Activity implements View.OnTouchListener {
     private int PUCK_RADIUS;
     private int pointsToWin;
     private String friction;
-    private Boolean mode;
+    private String theme;
+    private Boolean bestOutOf3;
     private static final String TAG = "Tag-AirHockity";
     private Player[] players;
     private int round = 1;
@@ -72,9 +65,11 @@ public class Game extends Activity implements View.OnTouchListener {
         mFrame = (ViewGroup) findViewById(R.id.frame);
         mFrame.setOnTouchListener(this);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        pointsToWin = prefs.getInt("points", 0);
-        friction = prefs.getString("friction", null);
-        mode = prefs.getBoolean("mode",false);
+        //Uses default if key is null
+        pointsToWin = prefs.getInt("points", 3);
+        friction = prefs.getString("friction", "some");
+        bestOutOf3 = prefs.getBoolean("bestOutOf3", false);
+        theme = prefs.getString("theme", "orange and blue");
 
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inScaled = false;
@@ -143,7 +138,7 @@ public class Game extends Activity implements View.OnTouchListener {
                 if (mField.getScoreBot() == pointsToWin) {
                     playSoundOnWin.start();
                     mField.setBotWins(mField.getBotWins() + 1);
-                    if (mode) {
+                    if (bestOutOf3) {
                         mField.drawRoundWinner("bot", round);
                         round++;
                         mField.resetScore();
@@ -161,7 +156,7 @@ public class Game extends Activity implements View.OnTouchListener {
                 if (mField.getScoreTop() == pointsToWin) {
                     playSoundOnWin.start();
                     mField.setTopWins(mField.getTopWins() + 1);
-                    if (mode) {
+                    if (bestOutOf3) {
                         mField.drawRoundWinner("top", round);
                         round++;
                         mField.resetScore();

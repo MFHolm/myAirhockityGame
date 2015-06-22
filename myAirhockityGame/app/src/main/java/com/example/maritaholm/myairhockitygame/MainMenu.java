@@ -27,10 +27,6 @@ public class MainMenu extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        prefs.edit().putInt("points", 3).commit();
-        prefs.edit().putString("friction", "some").commit();
-        prefs.edit().putString("theme", "orange and blue").apply();
-
         final MediaPlayer playSoundButtonTouch = MediaPlayer.create(getApplicationContext(),R.raw.menutouch);
         final Button startButton = (Button) findViewById(R.id.quickgamebutton);
         final Button outof3Button = (Button) findViewById(R.id.outof3button);
@@ -42,7 +38,6 @@ public class MainMenu extends Activity {
             @Override
             public void onClick(View v) {
                 playSoundButtonTouch.start();
-                prefs.edit().putBoolean("mode", false).commit();
                 Intent quickGame = new Intent(MainMenu.this, Game.class);
                 startActivity(quickGame);
             }
@@ -52,9 +47,8 @@ public class MainMenu extends Activity {
             @Override
             public void onClick(View v) {
                 playSoundButtonTouch.start();
-                prefs.edit().putBoolean("mode", true).commit();
+                prefs.edit().putBoolean("bestOutOf3", true).commit();
                 Intent outof3Game = new Intent(MainMenu.this, Game.class);
-                Log.d("test",String.valueOf(prefs.getBoolean("mode",true)));
                 startActivity(outof3Game);
 
 
