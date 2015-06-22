@@ -41,12 +41,14 @@ public class Game extends Activity implements View.OnTouchListener {
     private String friction;
     private int round = 1;
 
-    //True for best out of 3, otherwise false
-    //True for best out of 3, otherwise false.
+    // Creates a WorkerThread
+    private ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    
     public boolean isSoundEnabled;
     private Boolean mode;
 
-    private Boolean bestOutOf3, isSoundEnabled;
+    //True for best out of 3, otherwise false
+    private Boolean bestOutOf3;
     private Player[] players;
 
     SharedPreferences prefs = null;
@@ -119,9 +121,6 @@ public class Game extends Activity implements View.OnTouchListener {
         final MediaPlayer playSoundOnGoal = MediaPlayer.create(getApplicationContext(),R.raw.ongoal);
         final MediaPlayer playSoundOnWin = MediaPlayer.create(getApplicationContext(),R.raw.cheer);
 
-        // Creates a WorkerThread
-        final ScheduledExecutorService executor = Executors
-                .newScheduledThreadPool(1);
 
         executor.scheduleWithFixedDelay(new Runnable() {
             @Override
@@ -135,7 +134,6 @@ public class Game extends Activity implements View.OnTouchListener {
                 //Logic for incrementing goal score and determining game winner
                 if (puck.topGoal()) {
                     if (isSoundEnabled){
-                    if (prefs.getBoolean("sound", true)) {
                         vibrateOnGoal();
                         playSoundOnGoal.start();
                     }
@@ -317,6 +315,12 @@ public class Game extends Activity implements View.OnTouchListener {
             }
         });
         return builder.create();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        executor.shutdown();
     }
 
     //Show winner dialog

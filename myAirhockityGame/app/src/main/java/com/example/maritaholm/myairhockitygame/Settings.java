@@ -132,7 +132,6 @@ public class Settings extends Activity {
         });
 
         // Returns to main menu
-
         retButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
