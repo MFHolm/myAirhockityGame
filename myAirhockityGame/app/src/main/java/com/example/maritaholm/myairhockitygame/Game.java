@@ -3,11 +3,16 @@ package com.example.maritaholm.myairhockitygame;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.util.Log;
@@ -15,6 +20,11 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import com.example.maritaholm.myairhockitygame.Player;
+import com.example.maritaholm.myairhockitygame.Puck;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -57,6 +67,10 @@ public class Game extends Activity implements View.OnTouchListener {
         mode = prefs.getBoolean("mode",false);
 
         mField = new Field(getApplicationContext(),mFrame);
+        mField.setScoreBot(0);
+        mField.setScoreBot(0);
+        mField.setTopWins(0);
+        mField.setBotWins(0);
         mFrame.addView(mField);
 
         players = new Player[2];
@@ -64,19 +78,22 @@ public class Game extends Activity implements View.OnTouchListener {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inScaled = false;
         mBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.player1, opts);
-        player1 = new Player(getApplicationContext(), 400,300, mBitmap1);
+        player1 = new Player("player1",getBaseContext(), 400,300, mBitmap1);
         players[0]=player1;
         mFrame.addView(player1);
 
         mBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.player2, opts);
-        player2 = new Player(getApplicationContext(), 400,800, mBitmap2);
+        player2 = new Player("player2",getBaseContext(), 400,800, mBitmap2);
         players[1]=player2;
         mFrame.addView(player2);
 
         mBitmap3 = BitmapFactory.decodeResource(getResources(), R.drawable.puck);
-        puck = new Puck(getApplicationContext(), 350, 600, mBitmap3, mFrame, this);
+        puck = new Puck(getBaseContext(), 350, 600, mBitmap3, mFrame, this,this.friction);
         mFrame.addView(puck);
-        start(puck,mField,mFrame);
+
+
+        Log.d("Puck",puck.getX()+" and "+puck.getY());
+        start(puck, mField, mFrame);
 
 
     }
@@ -88,48 +105,59 @@ public class Game extends Activity implements View.OnTouchListener {
     public void start(final Puck puck, final Field mField,final ViewGroup mFrame) {
 
         // Creates a WorkerThread
+
         ScheduledExecutorService executor = Executors
                 .newScheduledThreadPool(1);
 
         executor.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG,"updating");
                 puck.move(REFRESH_RATE);
                 puck.deaccelerate();
                 puck.postInvalidate();
+
                 if (puck.topGoal()) {
+                   // vibrateOnGoal();
                     mField.setScoreBot(mField.getScoreBot() + 1);
                     resetPlayerPuck();
+
                 }
                 if (puck.botGoal()) {
+                   // vibrateOnGoal();
                     mField.setScoreTop(mField.getScoreTop() + 1);
                     resetPlayerPuck();
+
                 }
                 if (mField.getScoreBot() == pointsToWin) {
                     mField.setBotWins(mField.getBotWins() + 1);
-                    if(mode){
-                        if(mField.getBotWins() >= 3){
-
+                    if (mode) {
+                        if (mField.getBotWins() == 3) {
+                            createWinnerDialog("Bottom").show();
                         }
                     } else {
-
+                        createWinnerDialog("Bottom").show();
                     }
                 }
                 if (mField.getScoreTop() == pointsToWin) {
                     mField.setTopWins(mField.getTopWins() + 1);
-                    if(mode){
-                        if(mField.getTopWins()>= 3){
-
+                    if (mode) {
+                        if (mField.getTopWins() == 3) {
+                            createWinnerDialog("Top").show();
                         }
                     } else {
-
+                        createWinnerDialog("Top").show();
                     }
 
                 }
             }
         }, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);
     }
+    private void vibrateOnGoal(){
+        Vibrator v = (Vibrator) getSystemService(getApplicationContext().VIBRATOR_SERVICE);
+        // Vibrate for 800 milliseconds
+        v.vibrate(800);
+    }
+
 
     private boolean intersects(float x, float y) {
         for (Player p : players) {
@@ -155,6 +183,7 @@ public class Game extends Activity implements View.OnTouchListener {
         puck.setY(mFrame.getBottom() / 2);
         player1.moveTo(400,300);
         player2.moveTo(400,800);
+
         /*player1.moveTo(mFrame.getRight() / 2, mFrame.getBottom() / 4);
         player2.moveTo(mFrame.getRight()/2,mFrame.getBottom()*(3/4));*/
 
@@ -170,10 +199,39 @@ public class Game extends Activity implements View.OnTouchListener {
             if (p != null) {
                 float x = event.getX(i);
                 float y = event.getY(i);
-                p.moveTo(x, y);
+                switch (p.getName()) {
+                    case "player1":
+                        Log.d(TAG, "player 1");
+                        if (y >= (mFrame.getHeight() / 2)-p.getRadius() ) {
+                            Log.d(TAG, "over the line");
+                            Log.d(TAG, ""+y);
+
+                            p.moveTo(x, (float) ((mFrame.getHeight() / 2)-p.getRadius()));
+                        }
+                        else {
+                            p.moveTo(x, y);
+                        }
+                        break;
+                    case "player2":
+                        Log.d(TAG, "player 2");
+                        if (y <= (mFrame.getHeight() / 2)+p.getRadius()) {
+                            Log.d(TAG, "over the line");
+                            Log.d(TAG, ""+y);
+
+                            p.moveTo(x, (float) ((mFrame.getHeight() / 2)+p.getRadius()));
+                        }
+                        else {
+                            p.moveTo(x, y);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                //p.moveTo(x, y);
                 VelocityTracker tracker = VelocityTracker.obtain();
                 tracker.addMovement(event);
-                tracker.computeCurrentVelocity(1000);
+                tracker.computeCurrentVelocity(500);
                 if (p.intersects(puck)) {
                     float xVel = VelocityTrackerCompat.getXVelocity(tracker, event.getPointerId(i));
                     float yVel = VelocityTrackerCompat.getYVelocity(tracker, event.getPointerId(i));
@@ -195,13 +253,15 @@ public class Game extends Activity implements View.OnTouchListener {
 
         createDialog(puck.getXVel(),puck.getYVel()).show();
 
+
+
+
     }
 
     public Dialog createDialog(final float tempXVel, final float tempYVel) {
 
 
-        puck.IncreaseVelocity(0, 0);
-
+        puck.setVelocity(0,0);
         // FLAG_PAUSE_PUCK = true;
 
         CharSequence[] choices = new CharSequence[2];
@@ -217,17 +277,46 @@ public class Game extends Activity implements View.OnTouchListener {
                             finish();
                         } else if (which == 0) {
                             // FLAG_PAUSE_PUCK = false;
-                            puck.IncreaseVelocity(tempXVel, tempYVel);
+                            puck.setVelocity(tempXVel, tempYVel);
                         }
                     }
                 });
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                puck.IncreaseVelocity(tempXVel, tempYVel);
+                puck.setVelocity(tempXVel, tempYVel);
                 //FLAG_PAUSE_PUCK = false;
             }
         });
         return builder.create();
     }
+
+    public AlertDialog createWinnerDialog(final String winner) {
+        CharSequence[] choice = new CharSequence[2];
+        choice[0] = "Play Again";
+        choice[1] = "Main Menu";
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(Game.this);
+        builder.setTitle(winner+" wins the game!")
+                .setItems(choice, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
+                        } else if (which == 1) {
+                            finish();
+                        }
+                    }
+                });
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+            }
+        });
+        return builder.create();
+    }
+
+
 }

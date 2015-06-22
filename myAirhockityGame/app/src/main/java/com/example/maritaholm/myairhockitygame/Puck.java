@@ -1,11 +1,14 @@
 package com.example.maritaholm.myairhockitygame;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.View;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by MaritaHolm on 18/06/15.
@@ -22,10 +25,9 @@ public class Puck extends View {
     private static final String TAG = "Tag-AirHockity";
     private View mFrame;
     private double DEACCELATION = 0.975;
-    private float MAX_SPEED = 10000;
 
 
-    public Puck(Context context, float x, float y, Bitmap bitmap, View frame, Game game) {
+    public Puck(Context context, float x, float y, Bitmap bitmap, View frame,Game game,String friction) {
         super(context);
         this.xPos = x;
         this.yPos = y;
@@ -35,6 +37,13 @@ public class Puck extends View {
         this.mFrame = frame;
         this.game = game;
         this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2 * (int)radius, 2 * (int)radius, false);
+        if(friction.equals("none")){
+            DEACCELATION = 1;
+        } else if(friction.equals("some")){
+            DEACCELATION = 0.97;
+        } else {
+            DEACCELATION = 0.875;
+        }
     }
     @Override
     protected synchronized void onDraw(Canvas canvas) {
@@ -51,65 +60,49 @@ public class Puck extends View {
         return yPos;
     }
 
-    public void setX(float x){
-        this.xPos=x;
-    }
-
-    public void setY(float y){
-        this.yPos=y;
-    }
-
+    public void setX(float x){this.xPos=x;}
+    public void setY(float y){this.yPos=y;}
+    public float getXVel() {return xVel; }
+    public float getYVel() {return yVel; }
     public void IncreaseVelocity(float x, float y) {
-        float oldX = xVel;
-        float oldY = yVel;
         xVel += x;
         yVel += y;
-        if (getSpeed() >= MAX_SPEED) {
-            xVel = oldX;
-            yVel = oldY;
-        }
     }
 
-    public void setVelocity(float x, float y) {
-        float oldX = xVel;
-        float oldY = yVel;
+    public void setVelocity(float x, float y){
         xVel = x;
-        yVel = y;
-        if (getSpeed() >= MAX_SPEED) {
-            xVel = oldX;
-            yVel = oldY;
-        }
+        yVel =y;
     }
+
     public void resetVelocity(){
         xVel = 0;
         yVel = 0;
     }
 
     protected void move(int rate) {
+        Log.d(TAG, "(" + xPos + ", " + yPos + ")");
+        Log.d(TAG, "intersectsTop: " + intersectsTop());
         if (intersectsTop()) {
             yPos = mFrame.getTop() + 1;
             yVel = yVel * (-1);
         }
+
         if (intersectsBottom()) {
             yPos = mFrame.getBottom() - (2 * radius + 1);
             yVel = yVel * (-1);
         }
+
         if (intersectsLeft()) {
             xPos = mFrame.getLeft() + 1;
             xVel = xVel * (-1);
         }
+
         if (intersectsRight()) {
             xPos = mFrame.getRight()-(2 * radius + 1);
             xVel = xVel * (-1);
         }
         if (intersectsPlayer() != null) {
-            /*if (!(-0.000001 < xVel && xVel < 0.00001 && -0.00001 < yVel && yVel < 0.00001)){
-                Player p = intersectsPlayer();
-                Vector newDircetion = getNewDirection(p);
-                double speed = getSpeed();
-                xVel = (float) newDircetion.getX() * (float) speed;
-                yVel = (float) newDircetion.getY() * (float) speed;
-            }*/
+            //nuttin
         }
 
         xPos += xVel/rate;
@@ -135,7 +128,11 @@ public class Puck extends View {
         return (xPos <= mFrame.getLeft());
     }
     private boolean intersectsRight() {
-        return (xPos + 2 * radius >= mFrame.getRight());
+        if(mFrame.getRight()>0){
+            return (xPos + 2 * radius >= mFrame.getRight());
+
+        } else
+            return false;
     }
 
     private boolean intersectsTop() {
@@ -143,7 +140,11 @@ public class Puck extends View {
     }
 
     private boolean intersectsBottom() {
-        return (yPos + 2 * radius >= mFrame.getBottom())&&!((xPos>=(mFrame.getRight()/2)-100)&&(xPos+2*radius<=(mFrame.getRight()/2)+100));
+        if(mFrame.getBottom()>0){
+            return (yPos + 2 * radius >= mFrame.getBottom())&&!((xPos>=(mFrame.getRight()/2)-100)&&(xPos+2*radius<=(mFrame.getRight()/2)+100));
+
+        } else
+            return false;
     }
 
     private Player intersectsPlayer() {
@@ -158,52 +159,6 @@ public class Puck extends View {
     public void deaccelerate() {
         xVel = xVel * (float) DEACCELATION;
         yVel = yVel * (float) DEACCELATION;
-    }
-
-    public Vector getNewDirection(Player p) {
-
-        double playerCentrumX = p.getX()+p.getRadius();
-        double playerCentrumY = p.getY()+p.getRadius();
-        double centrumX = xPos + radius;
-        double centrumY = yPos + radius;
-
-        Vector radiusVector = new Vector((( p.getRadius()/(p.getRadius()+radius)) * (playerCentrumX - centrumX)),
-                (( p.getRadius()/(p.getRadius()+radius)) * (playerCentrumY - centrumY)));
-        Log.d(TAG, "radiusVector: " + radiusVector);
-        Vector velVector = new Vector(xVel,yVel);
-        Log.d(TAG, "xVel: " +xVel + " yVel: " + yVel);
-        Log.d(TAG, "velVector: " + velVector);
-
-
-        Vector radiusVectorNormed = new Vector(radiusVector.getX()/radiusVector.length(),
-                radiusVector.getY()/radiusVector.length());
-        Log.d(TAG, "radiusVectorNormed: " + radiusVectorNormed);
-
-        double dotProductVelocityRadius = 2 * dotProduct(velVector,radiusVectorNormed);
-        Log.d(TAG, "dotProductVelocityRadius: " + dotProductVelocityRadius);
-        Vector radiusNormScaled = new Vector(radiusVectorNormed.getX()*dotProductVelocityRadius,
-                radiusVectorNormed.getY()*dotProductVelocityRadius);
-        Log.d(TAG, "radiusNormScaled: " + radiusNormScaled);
-
-
-        Vector newVelocity = new Vector(velVector.getX()-radiusNormScaled.getX(),
-                velVector.getY()-radiusNormScaled.getY());
-        Log.d(TAG, "newVelocity: " + newVelocity);
-
-        newVelocity.norm();
-
-        return newVelocity;
-    }
-    public double getSpeed(){
-        Log.d(TAG, "Speed: " + (new Vector(xVel,yVel)).length());
-        return (new Vector(xVel,yVel)).length();
-    }
-    public float getXVel() {
-        return xVel;
-    }
-
-    public float getYVel() {
-        return yVel;
     }
 
 }

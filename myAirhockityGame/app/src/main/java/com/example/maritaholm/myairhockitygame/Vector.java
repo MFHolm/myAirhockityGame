@@ -25,12 +25,5 @@ public class Vector {
         return "(" + x + ", " + y + ")";
     }
 
-    public void norm() {
-        if (!(-0.00001 <length() && length() < 0.00001)) {
-            this.x = this.x/this.length();
-            this.y = this.y/this.length();
-        }
-    }
-
 
 }

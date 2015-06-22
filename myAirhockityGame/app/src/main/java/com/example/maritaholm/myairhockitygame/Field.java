@@ -4,7 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.nfc.Tag;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * Created by MThomsen on 18-06-2015.
@@ -16,6 +21,7 @@ public class Field extends View {
     private int scoreBot = 0;
     private int topWins = 0;
     private int botWins = 0;
+    private static final String TAG = "Score";
 
     public Field(Context context, View mFrame) {
         super(context);
@@ -52,6 +58,7 @@ public class Field extends View {
         canvas.drawText(Integer.toString(scoreBot), mFrame.getRight() / 2, (mFrame.getBottom() / 2)+100, mPaint);
 
         //top score
+        Log.d(TAG,"WOWOWOW " + Integer.toString(scoreBot)+ " more wow: " + Integer.toString(scoreTop));
         canvas.rotate(180,mFrame.getRight() / 2, (mFrame.getBottom() / 2)-100);
         canvas.drawText(Integer.toString(scoreTop),((mFrame.getRight() / 2)-25), (mFrame.getBottom() / 2)-100, mPaint);
 
