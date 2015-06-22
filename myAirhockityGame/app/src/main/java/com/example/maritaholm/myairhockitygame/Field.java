@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 /**
  * Created by MThomsen on 18-06-2015.
+ *
+ * Responsible for drawing the edges of the field, the goal, the line in the middle, the score of
+ * the current game and the number of wins in a best out of 3 game.
  */
 public class Field extends View {
     private View mFrame;
@@ -32,6 +35,7 @@ public class Field extends View {
         super(context);
         mPaint = new Paint();
         this.mFrame = mFrame;
+        //Used to draw the amount of game wins in a best out of 3.
         this.player1 = player1;
         this.player2 = player2;
     }
@@ -40,47 +44,46 @@ public class Field extends View {
     protected synchronized void onDraw(Canvas canvas) {
 
         mPaint.setColor(Color.DKGRAY);
-        //right
+        //Right side of field.
         canvas.drawRect(mFrame.getLeft(), mFrame.getTop(), mFrame.getLeft() + 10, mFrame.getBottom(), mPaint);
 
-        //left
+        //Left side of field.
         canvas.drawRect(mFrame.getRight() - 10, mFrame.getTop(), mFrame.getRight(), mFrame.getBottom(), mPaint);
 
-        //top
+        //Top part of field.
         canvas.drawRect(mFrame.getLeft(), mFrame.getTop(), (mFrame.getRight()/2)-100, mFrame.getTop()+10, mPaint);
         canvas.drawRect((mFrame.getRight() / 2) + 100, mFrame.getTop(), mFrame.getRight(), mFrame.getTop() + 10, mPaint);
 
-        //bottom
+        //Bottom side of field.
         canvas.drawRect(mFrame.getLeft(), mFrame.getBottom() - 10, (mFrame.getRight() / 2) - 100, mFrame.getBottom(), mPaint);
         canvas.drawRect((mFrame.getRight() / 2) + 100, mFrame.getBottom() - 10, mFrame.getRight(), mFrame.getBottom(), mPaint);
 
-        //centerline
+        //Center line.
         mPaint.setColor(Color.GRAY);
         canvas.drawRect(mFrame.getLeft() + 10, (mFrame.getBottom() / 2) - 2, (mFrame.getRight() / 2) - 150, (mFrame.getBottom() / 2) + 2, mPaint);
         canvas.drawRect((mFrame.getRight() / 2) + 150, (mFrame.getBottom() / 2) - 2, (mFrame.getRight() - 10), (mFrame.getBottom() / 2) + 2, mPaint);
 
-        //bottom score
+        //Score for bottom side.
         mPaint.setTextSize(50);
         canvas.drawText(Integer.toString(scoreBot), mFrame.getRight() / 2, (mFrame.getBottom() / 2) + 100, mPaint);
 
-        //top score
+        //Score for top side.
         canvas.rotate(180,mFrame.getRight() / 2, (mFrame.getBottom() / 2)-100);
         canvas.drawText(Integer.toString(scoreTop), ((mFrame.getRight() / 2) - 25), (mFrame.getBottom() / 2) - 100, mPaint);
 
-        canvas.rotate(180,mFrame.getRight() / 2, (mFrame.getBottom() / 2) - 100);
-        Log.d("test", "" + mFrame.getBottom() / 2);
+        //Undoing previous rotation.
+        canvas.rotate(180, mFrame.getRight() / 2, (mFrame.getBottom() / 2) - 100);
 
-        //draw winners
+        //Draw amount of wins between each player in best out of 3.
         for(int i = 0; i < 3;i++){
             if(winners[i]!=null){
                 if(i == 0){
-                    canvas.drawBitmap(winners[0], (mFrame.getRight()/2) - 50, (mFrame.getBottom()/2)+2, mPaint);
-                    Log.d("test", "BITMAP " + (mFrame.getBottom()/2));
+                    canvas.drawBitmap(winners[0], (mFrame.getRight()/2) - 50, (mFrame.getBottom()/2)- 25/2, mPaint);
                 } else if (i == 1) {
-                    canvas.drawBitmap(winners[1],(mFrame.getRight()/2),(mFrame.getBottom()/2)+2,mPaint);
+                    canvas.drawBitmap(winners[1],(mFrame.getRight()/2),(mFrame.getBottom()/2)- 25/2,mPaint);
 
                 } else if (i == 2) {
-                    canvas.drawBitmap(winners[2],(mFrame.getRight()/2) +  50,(mFrame.getBottom()/2)+2,mPaint);
+                    canvas.drawBitmap(winners[2],(mFrame.getRight()/2) +  50,(mFrame.getBottom()/2)- 25/2,mPaint);
 
                 }
             }
@@ -106,11 +109,12 @@ public class Field extends View {
         return this.scoreBot;
     }
 
+    //Sets the bitmap corresponding to the given winner.
     public void drawRoundWinner(String winner, int round){
         if(winner.equals("top")){
-            winners[round-1] = Bitmap.createScaledBitmap(player1,20,20,false);
+            winners[round-1] = Bitmap.createScaledBitmap(player1,25,25,false);
         } else {
-            winners[round-1] = Bitmap.createScaledBitmap(player2,20,20,false);
+            winners[round-1] = Bitmap.createScaledBitmap(player2,25,25,false);
         }
         postInvalidate();
 

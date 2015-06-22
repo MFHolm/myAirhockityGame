@@ -4,12 +4,15 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.Bundle;
 
 /**
  * Created by MThomsen on 22-06-2015.
  */
+
+// Creates a pop up which displays the winner of the game
 public class WinnerDialog extends DialogFragment {
     public static WinnerDialog newInstance(String winner){
         WinnerDialog wd = new WinnerDialog();
@@ -23,9 +26,17 @@ public class WinnerDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState){
         String winner = getArguments().getString("winner");
 
-        return new AlertDialog.Builder(getActivity())
+        Dialog AD = new AlertDialog.Builder(getActivity())
                 .setTitle("The winner is " + winner + "!")
-                .setPositiveButton("Play again!",
+                .setPositiveButton("Return to main menu!",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                getActivity().finish();
+                            }
+                        }
+                )
+
+                .setNegativeButton("Play again!",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 Intent intent = getActivity().getIntent();
@@ -33,15 +44,9 @@ public class WinnerDialog extends DialogFragment {
                                 startActivity(intent);
                             }
                         }
-
-                )
-                .setNegativeButton("Return to main menu!",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                getActivity().finish();
-                            }
-                        }
                 )
                 .create();
-    }
-}
+        AD.setCanceledOnTouchOutside(false);
+        return AD;
+    }}
+

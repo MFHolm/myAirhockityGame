@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -14,8 +17,9 @@ import android.widget.RadioGroup;
 
 public class Settings extends Activity {
 
-
+    private static final String TAG = "Tag-AirHockity";
     SharedPreferences prefs = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,14 +52,18 @@ public class Settings extends Activity {
         });
 
 
+        // Resets preferences
         defButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Checks toggle buttons
+                playSoundButtonTouch.start();
                 soundGroup.check(R.id.sound_on);
                 pointsGroup.check(R.id.radio_three);
                 frictionGroup.check(R.id.radio_some);
                 themeGroup.check(R.id.radio_orange_blue);
 
+                // Updates pref with the default values
 
                 prefs.edit().putInt("player1", R.drawable.orange_player).apply();
                 prefs.edit().putInt("player2", R.drawable.blue_player).apply();
@@ -63,6 +71,9 @@ public class Settings extends Activity {
             }
         });
 
+
+        // Check if user updates points needed to win, the amount of friction or chooses another theme
+        // Saves chosen preferences to a PreferenceManager prefs
 
         pointsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -82,10 +93,10 @@ public class Settings extends Activity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(R.id.radio_none == checkedId){
                     prefs.edit().putString("friction", "none").commit();
-                } else if (checkedId == R.id.radio_five){
-                    prefs.edit().putString("friction", "some").commit();
-                } else if (checkedId == R.id.radio_ten){
-                    prefs.edit().putString("friction", "much").commit();
+                } else if (checkedId == R.id.radio_some){
+                    prefs.edit().putString("friction","some").commit();
+                } else if (checkedId == R.id.radio_much){
+                    prefs.edit().putString("friction","much").commit();
                 }
             }
         });
@@ -104,7 +115,7 @@ public class Settings extends Activity {
                     prefs.edit().putInt("player2", R.drawable.green_player).apply();
                     prefs.edit().putInt("puck", R.drawable.grey_puck).apply();
                 } else if (checkedId == R.id.radio_yellow_purple){
-                    prefs.edit().putString("theme", "yellow and orange").apply();
+                    prefs.edit().putString("theme", "yellow and purple").apply();
                     prefs.edit().putInt("player1", R.drawable.yellow_player).apply();
                     prefs.edit().putInt("player2", R.drawable.purple_player).apply();
                     prefs.edit().putInt("puck", R.drawable.grey_puck).apply();
@@ -117,16 +128,19 @@ public class Settings extends Activity {
             }
         });
 
+        // Returns to main menu
         retButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
-
-
     }
+
+    // Updates which radio button is checked
+    // Gets which button is selected from prefs
+    public void setButtons(RadioGroup pointsGroup,RadioGroup frictionGroup, RadioGroup themeGroup,
+                           int set,String friction, String theme){
     public void setButtons(RadioGroup soundGroup,RadioGroup pointsGroup,RadioGroup frictionGroup, RadioGroup themeGroup,
                            int set,String friction, String theme, Boolean isSoundOn){
         if (isSoundOn){
@@ -154,6 +168,14 @@ public class Settings extends Activity {
                 break;
         }
 
+    /*    if(friction.equals("none")){
+            frictionGroup.check(R.id.radio_none);
+        } else if (friction.equals("some")){
+            frictionGroup.check(R.id.radio_some);
+        } else {
+            frictionGroup.check(R.id.radio_much);
+        } */
+
         switch (theme) {
             case "orange and blue" : themeGroup.check(R.id.radio_orange_blue);
                 break;
@@ -166,8 +188,5 @@ public class Settings extends Activity {
             default : themeGroup.check(R.id.radio_orange_blue);
                 break;
         }
-
-
     }
-
 }
