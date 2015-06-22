@@ -25,9 +25,9 @@ public class Settings extends Activity {
         final RadioGroup pointsGroup  = (RadioGroup) findViewById(R.id.points_group);
         final RadioGroup frictionGroup = (RadioGroup) findViewById(R.id.friction_group);
         final RadioGroup themeGroup = (RadioGroup) findViewById(R.id.theme_group);
-        int set = prefs.getInt("points",0);
-        String friction = prefs.getString("friction", null);
-        String theme = prefs.getString("theme", null);
+        int set = prefs.getInt("points",3);
+        String friction = prefs.getString("friction", "some");
+        String theme = prefs.getString("theme", "orange and blue");
         final MediaPlayer playSoundButtonTouch = MediaPlayer.create(getApplicationContext(), R.raw.menutouch);
 
         setButtons(pointsGroup,frictionGroup,themeGroup,set,friction,theme);
@@ -141,9 +141,6 @@ public class Settings extends Activity {
             default : frictionGroup.check(R.id.radio_some);
                 break;
         }
-        Log.d(TAG, "in switch: " + theme);
-
-
         switch (theme) {
             case "orange and blue" : themeGroup.check(R.id.radio_orange_blue);
                 break;
