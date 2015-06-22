@@ -57,7 +57,6 @@ public class Settings extends Activity {
             @Override
             public void onClick(View v) {
                 // Checks toggle buttons
-                playSoundButtonTouch.start();
                 soundGroup.check(R.id.sound_on);
                 pointsGroup.check(R.id.radio_three);
                 frictionGroup.check(R.id.radio_some);
@@ -139,8 +138,6 @@ public class Settings extends Activity {
 
     // Updates which radio button is checked
     // Gets which button is selected from prefs
-    public void setButtons(RadioGroup pointsGroup,RadioGroup frictionGroup, RadioGroup themeGroup,
-                           int set,String friction, String theme){
     public void setButtons(RadioGroup soundGroup,RadioGroup pointsGroup,RadioGroup frictionGroup, RadioGroup themeGroup,
                            int set,String friction, String theme, Boolean isSoundOn){
         if (isSoundOn){
