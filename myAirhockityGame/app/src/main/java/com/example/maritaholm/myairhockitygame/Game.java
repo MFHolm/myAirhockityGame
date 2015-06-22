@@ -138,11 +138,11 @@ public class Game extends Activity implements View.OnTouchListener {
                         mField.resetScore();
                         resetPuck();
                         if (mField.getBotWins() == 3) {
-                            //createWinnerDialog("Bottom").show();
+                            /
                             showWinnerDialog("Bottom");
                         }
                     } else {
-                        //createWinnerDialog("Bottom").show();
+
                         showWinnerDialog("Bottom");
                     }
                 }
@@ -154,11 +154,11 @@ public class Game extends Activity implements View.OnTouchListener {
                         mField.resetScore();
                         resetPuck();
                         if (mField.getTopWins() == 3) {
-                            //createWinnerDialog("Top").show();
+                            ;
                             showWinnerDialog("Top");
                         }
                     } else {
-                        //createWinnerDialog("Top").show();'
+
                         showWinnerDialog("Top");
                     }
 
@@ -295,32 +295,6 @@ public class Game extends Activity implements View.OnTouchListener {
         mWinnerDialog.show(getFragmentManager(),"dialog");
     }
 
-    /*public AlertDialog createWinnerDialog(final String winner) {
-        CharSequence[] choice = new CharSequence[2];
-        choice[0] = "Play Again";
-        choice[1] = "Main Menu";
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(Game.this);
-        builder.setTitle(winner+" wins the game!")
-                .setItems(choice, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            Intent intent = getIntent();
-                            finish();
-                            startActivity(intent);
-                        } else if (which == 1) {
-                            finish();
-                        }
-                    }
-                });
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-            }
-        });
-        return builder.create();
-    }*/
 
 
 }
