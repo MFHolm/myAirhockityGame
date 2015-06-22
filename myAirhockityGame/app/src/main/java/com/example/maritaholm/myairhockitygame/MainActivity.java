@@ -33,17 +33,10 @@ public class MainActivity extends Activity {
 
         final MediaPlayer playSoundButtonTouch = MediaPlayer.create(getApplicationContext(),R.raw.menutouch);
         final Button startButton = (Button) findViewById(R.id.quickgamebutton);
-        startButton.setBackgroundColor(Color.RED);
-        startButton.setTextColor(Color.WHITE);
         final Button outof3Button = (Button) findViewById(R.id.outof3button);
-        outof3Button.setBackgroundColor(Color.RED);
-        outof3Button.setTextColor(Color.WHITE);
         final Button settingsButton = (Button) findViewById(R.id.settingsbutton);
-        settingsButton.setBackgroundColor(Color.RED);
-        settingsButton.setTextColor(Color.WHITE);
         final Button quitButton = (Button) findViewById(R.id.quitbutton);
-        quitButton.setBackgroundColor(Color.RED);
-        quitButton.setTextColor(Color.WHITE);
+
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
