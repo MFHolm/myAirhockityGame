@@ -1,17 +1,12 @@
 package com.example.maritaholm.myairhockitygame;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
@@ -64,11 +59,11 @@ public class Settings extends Activity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (R.id.radio_three == checkedId) {
-                    prefs.edit().putInt("points", 3).commit();
+                    prefs.edit().putInt("points", 3).apply();
                 } else if (checkedId == R.id.radio_five) {
-                    prefs.edit().putInt("points", 5).commit();
+                    prefs.edit().putInt("points", 5).apply();
                 } else if (checkedId == R.id.radio_ten) {
-                    prefs.edit().putInt("points", 10).commit();
+                    prefs.edit().putInt("points", 10).apply();
                 }
             }
         });
@@ -77,11 +72,11 @@ public class Settings extends Activity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(R.id.radio_none == checkedId){
-                    prefs.edit().putString("friction", "none").commit();
+                    prefs.edit().putString("friction", "none").apply();
                 } else if (checkedId == R.id.radio_some){
-                    prefs.edit().putString("friction","some").commit();
+                    prefs.edit().putString("friction","some").apply();
                 } else if (checkedId == R.id.radio_much){
-                    prefs.edit().putString("friction","much").commit();
+                    prefs.edit().putString("friction","much").apply();
                 }
             }
         });

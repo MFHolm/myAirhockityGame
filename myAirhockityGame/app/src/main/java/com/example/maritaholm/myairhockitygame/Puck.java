@@ -10,9 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by MaritaHolm on 18/06/15.
- */
 public class Puck extends View {
     private final Paint mPainter = new Paint();
     private float xPos;
@@ -20,7 +17,6 @@ public class Puck extends View {
     private float xVel;
     private float yVel;
     private float radius;
-    private Game game;
     private Bitmap mScaledBitmap;
     private static final String TAG = "Tag-AirHockity"; //TODO
     private View mFrame;
@@ -28,7 +24,7 @@ public class Puck extends View {
     private double DEACCELATION = 0.975;
 
 
-    public Puck(Context context, float x, float y, Bitmap bitmap, View frame,Game game,String friction, int radius) {
+    public Puck(Context context, float x, float y, Bitmap bitmap, View frame,String friction, int radius) {
         super(context);
         this.xPos = x;
         this.yPos = y;
@@ -36,7 +32,6 @@ public class Puck extends View {
         this.yVel = 0;
         this.radius = radius;
         this.mFrame = frame;
-        this.game = game;
         this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2 * (int)radius, 2 * (int)radius, false);
         if(friction.equals("none")){
             DEACCELATION = 1;
