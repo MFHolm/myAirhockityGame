@@ -1,18 +1,14 @@
 package com.example.maritaholm.myairhockitygame;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 
 
@@ -28,29 +24,45 @@ public class Settings extends Activity {
         final RadioGroup pointsGroup  = (RadioGroup) findViewById(R.id.points_group);
         final RadioGroup frictionGroup = (RadioGroup) findViewById(R.id.friction_group);
         final RadioGroup themeGroup = (RadioGroup) findViewById(R.id.theme_group);
+        final RadioGroup soundGroup = (RadioGroup) findViewById(R.id.sound_group);
         int set = prefs.getInt("points",0);
         String friction = prefs.getString("friction", null);
         String theme = prefs.getString("theme", null);
-        final MediaPlayer playSoundButtonTouch = MediaPlayer.create(getApplicationContext(), R.raw.menutouch);
+        Boolean sound = prefs.getBoolean("sound", true);
 
-        setButtons(pointsGroup,frictionGroup,themeGroup,set,friction,theme);
+        setButtons(soundGroup,pointsGroup,frictionGroup,themeGroup,set,friction,theme,sound);
 
         Button defButton = (Button) findViewById(R.id.default_button);
         Button retButton = (Button) findViewById(R.id.return_button);
 
+        //sound and vibration
+        soundGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.sound_on) {
+                    prefs.edit().putBoolean("sound", true).apply();
+                } else {
+                    prefs.edit().putBoolean("sound", false).apply();
+                }
+            }
+        });
+
+
         defButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playSoundButtonTouch.start();
+                soundGroup.check(R.id.sound_on);
                 pointsGroup.check(R.id.radio_three);
                 frictionGroup.check(R.id.radio_some);
                 themeGroup.check(R.id.radio_orange_blue);
+
 
                 prefs.edit().putInt("player1", R.drawable.orange_player).apply();
                 prefs.edit().putInt("player2", R.drawable.blue_player).apply();
                 prefs.edit().putInt("puck", R.drawable.grey_puck).apply();
             }
         });
+
 
         pointsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -71,9 +83,9 @@ public class Settings extends Activity {
                 if(R.id.radio_none == checkedId){
                     prefs.edit().putString("friction", "none").commit();
                 } else if (checkedId == R.id.radio_five){
-                    prefs.edit().putString("friction","some").commit();
+                    prefs.edit().putString("friction", "some").commit();
                 } else if (checkedId == R.id.radio_ten){
-                    prefs.edit().putString("friction","much").commit();
+                    prefs.edit().putString("friction", "much").commit();
                 }
             }
         });
@@ -108,8 +120,6 @@ public class Settings extends Activity {
         retButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                playSoundButtonTouch.start();
                 finish();
             }
         });
@@ -117,8 +127,14 @@ public class Settings extends Activity {
 
 
     }
-    public void setButtons(RadioGroup pointsGroup,RadioGroup frictionGroup, RadioGroup themeGroup,
-                           int set,String friction, String theme){
+    public void setButtons(RadioGroup soundGroup,RadioGroup pointsGroup,RadioGroup frictionGroup, RadioGroup themeGroup,
+                           int set,String friction, String theme, Boolean isSoundOn){
+        if (isSoundOn){
+            soundGroup.check(R.id.sound_on);
+        }else{
+            soundGroup.check(R.id.sound_off);
+        }
+
         if(set == 3){
             pointsGroup.check(R.id.radio_three);
         } else if (set == 5){
@@ -137,14 +153,6 @@ public class Settings extends Activity {
             default : frictionGroup.check(R.id.radio_some);
                 break;
         }
-
-    /*    if(friction.equals("none")){
-            frictionGroup.check(R.id.radio_none);
-        } else if (friction.equals("some")){
-            frictionGroup.check(R.id.radio_some);
-        } else {
-            frictionGroup.check(R.id.radio_much);
-        } */
 
         switch (theme) {
             case "orange and blue" : themeGroup.check(R.id.radio_orange_blue);

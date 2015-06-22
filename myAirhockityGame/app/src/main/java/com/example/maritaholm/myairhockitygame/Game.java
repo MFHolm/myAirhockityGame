@@ -49,6 +49,7 @@ public class Game extends Activity implements View.OnTouchListener {
     private static final int REFRESH_RATE = 40;
     private int pointsToWin;
     private String friction;
+    public boolean isSoundEnabled;
     private Boolean mode;
     private static final String TAG = "Tag-AirHockity";
     private Player[] players;
@@ -73,6 +74,7 @@ public class Game extends Activity implements View.OnTouchListener {
         pointsToWin = prefs.getInt("points", 0);
         friction = prefs.getString("friction", null);
         mode = prefs.getBoolean("mode",false);
+
 
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inScaled = false;
@@ -123,19 +125,26 @@ public class Game extends Activity implements View.OnTouchListener {
                 puck.postInvalidate();
 
                 if (puck.topGoal()) {
-                    vibrateOnGoal();
-                    playSoundOnGoal.start();
+                    if (prefs.getBoolean("sound",true)){
+                        vibrateOnGoal();
+                        playSoundOnGoal.start();
+                    }
                     mField.setScoreBot(mField.getScoreBot() + 1);
                     resetPuck();
                 }
                 if (puck.botGoal()) {
-                    vibrateOnGoal();
-                    playSoundOnGoal.start();
+                    if (prefs.getBoolean("sound",true)){
+                        vibrateOnGoal();
+                        playSoundOnGoal.start();
+                    }
                     mField.setScoreTop(mField.getScoreTop() + 1);
                     resetPuck();
                 }
                 if (mField.getScoreBot() == pointsToWin) {
-                    playSoundOnWin.start();
+                    if (prefs.getBoolean("sound",true)){
+                        playSoundOnWin.start();
+                    }
+
                     mField.setBotWins(mField.getBotWins() + 1);
                     if (mode) {
                         mField.drawRoundWinner("bot", round);
@@ -153,7 +162,9 @@ public class Game extends Activity implements View.OnTouchListener {
                     }
                 }
                 if (mField.getScoreTop() == pointsToWin) {
-                    playSoundOnWin.start();
+                    if (prefs.getBoolean("sound",true)){
+                        playSoundOnWin.start();
+                    }
                     mField.setTopWins(mField.getTopWins() + 1);
                     if (mode) {
                         mField.drawRoundWinner("top", round);

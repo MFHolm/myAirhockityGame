@@ -27,9 +27,11 @@ public class MainMenu extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        prefs.edit().putBoolean("sound",true);
         prefs.edit().putInt("points", 3).commit();
         prefs.edit().putString("friction", "some").commit();
         prefs.edit().putString("theme", "orange and blue").apply();
+
 
         final MediaPlayer playSoundButtonTouch = MediaPlayer.create(getApplicationContext(),R.raw.menutouch);
         final Button startButton = (Button) findViewById(R.id.quickgamebutton);
@@ -41,8 +43,9 @@ public class MainMenu extends Activity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playSoundButtonTouch.start();
-                prefs.edit().putBoolean("mode", false).commit();
+                if (prefs.getBoolean("sound",true)){
+                    playSoundButtonTouch.start();
+                }
                 Intent quickGame = new Intent(MainMenu.this, Game.class);
                 startActivity(quickGame);
             }
@@ -51,8 +54,9 @@ public class MainMenu extends Activity {
         outof3Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playSoundButtonTouch.start();
-                prefs.edit().putBoolean("mode", true).commit();
+                if (prefs.getBoolean("sound",true)){
+                    playSoundButtonTouch.start();
+                }
                 Intent outof3Game = new Intent(MainMenu.this, Game.class);
                 Log.d("test",String.valueOf(prefs.getBoolean("mode",true)));
                 startActivity(outof3Game);
@@ -65,7 +69,9 @@ public class MainMenu extends Activity {
             @Override
             public void onClick(View v) {
                 Intent settings = new Intent(MainMenu.this,Settings.class);
-                playSoundButtonTouch.start();
+                if (prefs.getBoolean("sound",true)){
+                    playSoundButtonTouch.start();
+                }
                 startActivity(settings);
             }
         });
