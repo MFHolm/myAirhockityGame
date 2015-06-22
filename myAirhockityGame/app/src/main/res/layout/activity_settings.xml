@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="Points to win"
             android:textSize="30dp"
-            android:layout_marginTop="50dp" />
+            android:layout_marginTop="10dp" />
 
         <RadioGroup
             android:id="@+id/points_group"
