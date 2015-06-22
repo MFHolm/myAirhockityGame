@@ -260,9 +260,6 @@ public class Game extends Activity implements View.OnTouchListener {
 
         createDialog(puck.getXVel(),puck.getYVel()).show();
 
-
-
-
     }
 
     public Dialog createDialog(final float tempXVel, final float tempYVel) {
@@ -302,7 +299,4 @@ public class Game extends Activity implements View.OnTouchListener {
         DialogFragment mWinnerDialog = WinnerDialog.newInstance(winner);
         mWinnerDialog.show(getFragmentManager(), "dialog");
     }
-
-
-
 }

@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.RadioGroup;
 
 public class Settings extends Activity {
 
+    private static final String TAG = "Tag-AirHockity";
 
     SharedPreferences prefs = null;
     @Override
@@ -70,9 +72,9 @@ public class Settings extends Activity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(R.id.radio_none == checkedId){
                     prefs.edit().putString("friction", "none").commit();
-                } else if (checkedId == R.id.radio_five){
+                } else if (checkedId == R.id.radio_some){
                     prefs.edit().putString("friction","some").commit();
-                } else if (checkedId == R.id.radio_ten){
+                } else if (checkedId == R.id.radio_much){
                     prefs.edit().putString("friction","much").commit();
                 }
             }
@@ -138,7 +140,7 @@ public class Settings extends Activity {
                 break;
         }
 
-    /*    if(friction.equals("none")){
+/*        if(friction.equals("none")){
             frictionGroup.check(R.id.radio_none);
         } else if (friction.equals("some")){
             frictionGroup.check(R.id.radio_some);
