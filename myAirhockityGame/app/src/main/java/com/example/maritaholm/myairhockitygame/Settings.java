@@ -100,7 +100,7 @@ public class Settings extends Activity {
                     prefs.edit().putInt("player2", R.drawable.green_player).apply();
                     prefs.edit().putInt("puck", R.drawable.grey_puck).apply();
                 } else if (checkedId == R.id.radio_yellow_purple){
-                    prefs.edit().putString("theme", "yellow and orange").apply();
+                    prefs.edit().putString("theme", "yellow and purple").apply();
                     prefs.edit().putInt("player1", R.drawable.yellow_player).apply();
                     prefs.edit().putInt("player2", R.drawable.purple_player).apply();
                     prefs.edit().putInt("puck", R.drawable.grey_puck).apply();
@@ -146,6 +146,8 @@ public class Settings extends Activity {
             default : frictionGroup.check(R.id.radio_some);
                 break;
         }
+        Log.d(TAG, "in switch: " + theme);
+
 
         switch (theme) {
             case "orange and blue" : themeGroup.check(R.id.radio_orange_blue);
