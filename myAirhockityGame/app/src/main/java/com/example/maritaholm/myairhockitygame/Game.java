@@ -103,7 +103,7 @@ public class Game extends Activity implements View.OnTouchListener {
         super.onResume();
     }
 
-    public void start(final Puck puck, final Field mField,final ViewGroup mFrame) {
+    public void start() {
         final MediaPlayer playSoundOnGoal = MediaPlayer.create(getApplicationContext(),R.raw.ongoal);
         final MediaPlayer playSoundOnWin = MediaPlayer.create(getApplicationContext(),R.raw.cheer);
 
