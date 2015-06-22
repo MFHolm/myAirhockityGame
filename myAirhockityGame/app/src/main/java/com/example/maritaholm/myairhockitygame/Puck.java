@@ -22,10 +22,10 @@ public class Puck extends View {
     private float radius;
     private Game game;
     private Bitmap mScaledBitmap;
-    private static final String TAG = "Tag-AirHockity";
+    private static final String TAG = "Tag-AirHockity"; //TODO
     private View mFrame;
+    // Sets default acceleration to some resistance
     private double DEACCELATION = 0.975;
-    private float MAX_SPEED = 10000;
 
 
     public Puck(Context context, float x, float y, Bitmap bitmap, View frame,Game game,String friction, int radius) {
@@ -41,7 +41,7 @@ public class Puck extends View {
         if(friction.equals("none")){
             DEACCELATION = 1;
         } else if(friction.equals("some")){
-            DEACCELATION = 0.97;
+            DEACCELATION = 0.975;
         } else {
             DEACCELATION = 0.875;
         }
@@ -49,8 +49,9 @@ public class Puck extends View {
     @Override
     protected synchronized void onDraw(Canvas canvas) {
         canvas.drawBitmap(mScaledBitmap, xPos, yPos, mPainter);
-
     }
+
+    // Methods to manipulate and get info about the puck
     public float getRadius() {
         return radius;
     }
@@ -80,6 +81,8 @@ public class Puck extends View {
         yVel = 0;
     }
 
+
+    // Moves the puck, as long as it's inside the game frame
     protected void move(int rate) {
         if (intersectsTop()) {
             yPos = mFrame.getTop() + 1;
@@ -100,29 +103,25 @@ public class Puck extends View {
             xPos = mFrame.getRight()-(2 * radius + 1);
             xVel = xVel * (-1);
         }
-        if (intersectsPlayer() != null) {
-            //May be implemented
-        }
 
         xPos += xVel/rate;
         yPos += yVel/rate;
-
     }
+
+
+    // Returns true if user scores a goal
     protected boolean topGoal(){
         return (((xPos >= ((mFrame.getRight()/2)-100)))&&
                 (xPos+2*radius <= ((mFrame.getRight()/2)+100))&&(yPos <= ((mFrame.getTop()+10))));
     }
 
-    /*private double dotProduct(Vector a, Vector b) {
-        return a.getX()*b.getX() + a.getY() * b.getY();
-    }
-    private double length(Vector a) {
-        return Math.sqrt(Math.pow(a.getX(),2)+Math.pow(a.getY(),2));
-    }*/
     protected boolean botGoal(){
         return (((xPos >= ((mFrame.getRight()/2)-100)))&&
                 (xPos+2*radius <= ((mFrame.getRight()/2)+100))&&(yPos+2*radius >= ((mFrame.getBottom()-10))));
     }
+
+
+    // Returns true if puck is outside the game frame
     private boolean intersectsLeft() {
         return (xPos <= mFrame.getLeft());
     }
@@ -132,7 +131,6 @@ public class Puck extends View {
             return (xPos + 2 * radius >= mFrame.getRight());
         }
         else return false;
-
     }
 
     private boolean intersectsTop() {
@@ -148,15 +146,8 @@ public class Puck extends View {
         else return false;
     }
 
-    private Player intersectsPlayer() {
-        Player[] players = game.getPlayers();
-        for (Player p: players) {
-            if (p.intersects(this)) {
-                return p;
-            }
-        }
-        return null;
-    }
+
+    // Applies the chosen degree of acceleration
     public void deaccelerate() {
         xVel = xVel * (float) DEACCELATION;
         yVel = yVel * (float) DEACCELATION;
