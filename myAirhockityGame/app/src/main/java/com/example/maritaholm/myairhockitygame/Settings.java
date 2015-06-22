@@ -79,9 +79,9 @@ public class Settings extends Activity {
                 if(R.id.radio_none == checkedId){
                     prefs.edit().putString("friction", "none").commit();
                 } else if (checkedId == R.id.radio_some){
-                    prefs.edit().putString("friction","some").commit();
+                    prefs.edit().putString("friction", "some").commit();
                 } else if (checkedId == R.id.radio_much){
-                    prefs.edit().putString("friction","much").commit();
+                    prefs.edit().putString("friction", "much").commit();
                 }
             }
         });
@@ -89,27 +89,35 @@ public class Settings extends Activity {
         themeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                String tempTheme = null;
+                int tempPlayer1 = -1, tempPlayer2 = -1, tempPuck = -1;
+
                 if(checkedId == R.id.radio_orange_blue) {
-                    prefs.edit().putString("theme", "orange and blue").apply();
-                    prefs.edit().putInt("player1", R.drawable.orange_player).apply();
-                    prefs.edit().putInt("player2", R.drawable.blue_player).apply();
-                    prefs.edit().putInt("puck", R.drawable.grey_puck).apply();
+                    tempTheme = "orange and blue";
+                    tempPlayer1 = R.drawable.orange_player;
+                    tempPlayer2 = R.drawable.blue_player;
+                    tempPuck = R.drawable.grey_puck;
                 } else if (checkedId == R.id.radio_red_green) {
-                    prefs.edit().putString("theme", "red and green").apply();
-                    prefs.edit().putInt("player1", R.drawable.red_player).apply();
-                    prefs.edit().putInt("player2", R.drawable.green_player).apply();
-                    prefs.edit().putInt("puck", R.drawable.grey_puck).apply();
+                    tempTheme = "red and green";
+                    tempPlayer1 = R.drawable.red_player;
+                    tempPlayer2 =  R.drawable.green_player;
+                    tempPuck = R.drawable.grey_puck;
                 } else if (checkedId == R.id.radio_yellow_purple){
-                    prefs.edit().putString("theme", "yellow and purple").apply();
-                    prefs.edit().putInt("player1", R.drawable.yellow_player).apply();
-                    prefs.edit().putInt("player2", R.drawable.purple_player).apply();
-                    prefs.edit().putInt("puck", R.drawable.grey_puck).apply();
+                    tempTheme = "yellow and purple";
+                    tempPlayer1 = R.drawable.yellow_player;
+                    tempPlayer2 = R.drawable.purple_player;
+                    tempPuck = R.drawable.grey_puck;
                 } else if (checkedId == R.id.radio_kitten) {
-                    prefs.edit().putString("theme", "kitten").apply();
-                    prefs.edit().putInt("player1", R.drawable.paw_down).apply();
-                    prefs.edit().putInt("player2", R.drawable.paw_up).apply();
-                    prefs.edit().putInt("puck", R.drawable.mouse_puck).apply();
+                    tempTheme = "kitten";
+                    tempPlayer1 = R.drawable.paw_down;
+                    tempPlayer2 = R.drawable.paw_up;
+                    tempPuck = R.drawable.mouse_puck;
                 }
+
+                prefs.edit().putString("theme", tempTheme).apply();
+                prefs.edit().putInt("player1", tempPlayer1).apply();
+                prefs.edit().putInt("player2", tempPlayer2).apply();
+                prefs.edit().putInt("puck", tempPuck).apply();
             }
         });
 
