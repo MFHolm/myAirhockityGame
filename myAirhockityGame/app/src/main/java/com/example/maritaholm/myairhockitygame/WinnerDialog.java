@@ -8,9 +8,6 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.Bundle;
 
-/**
- * Created by MThomsen on 22-06-2015.
- */
 
 // Creates a pop up which displays the winner of the game
 public class WinnerDialog extends DialogFragment {
