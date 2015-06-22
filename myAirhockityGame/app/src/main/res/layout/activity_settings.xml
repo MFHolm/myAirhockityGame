@@ -20,8 +20,8 @@
             android:layout_width="175dp"
             android:layout_height="wrap_content"
             android:text="Points to win"
-            android:textSize="30dp"
-            android:layout_marginTop="50dp" />
+            android:textSize="20dp"
+            android:layout_marginTop="0dp" />
 
         <RadioGroup
             android:id="@+id/points_group"
@@ -54,7 +54,7 @@
             android:layout_width="175dp"
             android:layout_height="wrap_content"
             android:text="Friction"
-            android:textSize="30dp"
+            android:textSize="20dp"
             android:layout_marginTop="0dp" />
 
         <RadioGroup
@@ -87,7 +87,7 @@
             android:layout_width="175dp"
             android:layout_height="wrap_content"
             android:text="Theme"
-            android:textSize="30dp"
+            android:textSize="20dp"
             android:layout_marginTop="0dp" />
 
         <RadioGroup

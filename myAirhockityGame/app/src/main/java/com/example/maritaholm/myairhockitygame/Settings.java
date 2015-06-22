@@ -70,9 +70,9 @@ public class Settings extends Activity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(R.id.radio_none == checkedId){
                     prefs.edit().putString("friction", "none").commit();
-                } else if (checkedId == R.id.radio_five){
+                } else if (checkedId == R.id.radio_some){
                     prefs.edit().putString("friction","some").commit();
-                } else if (checkedId == R.id.radio_ten){
+                } else if (checkedId == R.id.radio_much){
                     prefs.edit().putString("friction","much").commit();
                 }
             }

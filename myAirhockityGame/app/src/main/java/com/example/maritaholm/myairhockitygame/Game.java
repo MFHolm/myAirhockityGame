@@ -300,6 +300,7 @@ public class Game extends Activity implements View.OnTouchListener {
 
     public void showWinnerDialog(String winner){
         DialogFragment mWinnerDialog = WinnerDialog.newInstance(winner);
+
         mWinnerDialog.show(getFragmentManager(), "dialog");
     }
 
