@@ -81,29 +81,22 @@ public class Puck extends View {
     }
 
     protected void move(int rate) {
-        Log.d(TAG, "(" + xPos + ", " + yPos + ")");
-        Log.d(TAG, "intersectsTop: " + intersectsTop());
         if (intersectsTop()) {
-
             yPos = mFrame.getTop() + 1;
             yVel = yVel * (-1);
         }
 
         if (intersectsBottom()) {
-
-
             yPos = mFrame.getBottom() - (2 * radius + 1);
             yVel = yVel * (-1);
         }
 
         if (intersectsLeft()) {
-
             xPos = mFrame.getLeft() + 1;
             xVel = xVel * (-1);
         }
 
         if (intersectsRight()) {
-
             xPos = mFrame.getRight()-(2 * radius + 1);
             xVel = xVel * (-1);
         }
