@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -13,6 +14,7 @@
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true">
+
         <TextView
             android:layout_gravity="center"
             android:layout_width="175dp"
@@ -21,28 +23,23 @@
             android:textSize="30dp"
             android:layout_marginTop="50dp" />
 
-
         <RadioGroup
-            android:id="@+id/pointsGroup"
+            android:id="@+id/points_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal" >
-
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Three"
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/radio_three"/>
-
-
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Five"
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/radio_five" />
-
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -50,6 +47,8 @@
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/radio_ten" />
         </RadioGroup>
+
+
         <TextView
             android:layout_gravity="center"
             android:layout_width="175dp"
@@ -57,27 +56,24 @@
             android:text="Friction"
             android:textSize="30dp"
             android:layout_marginTop="0dp" />
+
         <RadioGroup
-            android:id="@+id/frictionGroup"
+            android:id="@+id/friction_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal" >
-
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="None"
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/radio_none"/>
-
-
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Some"
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/radio_some" />
-
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,6 +82,46 @@
                 android:id="@+id/radio_much" />
         </RadioGroup>
 
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:text="Theme"
+            android:textSize="30dp"
+            android:layout_marginTop="0dp" />
+
+        <RadioGroup
+            android:id="@+id/theme_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" >
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Orange and blue"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/radio_orange_blue"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Red and green"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/radio_red_green" />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yellow and purple"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/radio_yellow_purple" />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kitten"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/radio_kitten"/>
+        </RadioGroup>
+
+
         <Button
             android:layout_width="126dp"
             android:layout_height="wrap_content"
@@ -93,13 +129,13 @@
             android:text="Set Default"
             android:layout_gravity="center_horizontal" />
 
+
         <Button
             android:layout_width="126dp"
             android:layout_height="wrap_content"
             android:id="@+id/return_button"
             android:text="Return"
             android:layout_gravity="center_horizontal" />
-
 
     </LinearLayout>
 </RelativeLayout>

@@ -27,7 +27,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         prefs.edit().putInt("points", 3).commit();
-        prefs.edit().putString("friction","some").commit();
+        prefs.edit().putString("friction", "some").commit();
+        prefs.edit().putString("theme", "orange and blue").apply();
 
 
 
