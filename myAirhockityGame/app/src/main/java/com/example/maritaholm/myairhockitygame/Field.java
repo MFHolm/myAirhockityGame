@@ -66,18 +66,21 @@ public class Field extends View {
         //top score
         canvas.rotate(180,mFrame.getRight() / 2, (mFrame.getBottom() / 2)-100);
         canvas.drawText(Integer.toString(scoreTop), ((mFrame.getRight() / 2) - 25), (mFrame.getBottom() / 2) - 100, mPaint);
+
+        canvas.rotate(180,mFrame.getRight() / 2, (mFrame.getBottom() / 2) - 100);
         Log.d("test", "" + mFrame.getBottom() / 2);
+
         //draw winners
         for(int i = 0; i < 3;i++){
             if(winners[i]!=null){
                 if(i == 0){
-                    canvas.drawBitmap(winners[0], (mFrame.getRight()/2) + 50, (mFrame.getBottom()/2)+2, mPaint);
+                    canvas.drawBitmap(winners[0], (mFrame.getRight()/2) - 50, (mFrame.getBottom() / 2), mPaint);
                     Log.d("test", "BITMAP " + (mFrame.getBottom()/2));
                 } else if (i == 1) {
                     canvas.drawBitmap(winners[1],(mFrame.getRight()/2),(mFrame.getBottom()/2)+2,mPaint);
 
                 } else if (i == 2) {
-                    canvas.drawBitmap(winners[2],(mFrame.getRight()/2)- 50,(mFrame.getBottom()/2)+2,mPaint);
+                    canvas.drawBitmap(winners[2],(mFrame.getRight()/2) + 50,(mFrame.getBottom()/2)+2,mPaint);
 
                 }
             }
