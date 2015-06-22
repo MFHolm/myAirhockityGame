@@ -94,7 +94,7 @@ public class Settings extends Activity {
                     prefs.edit().putInt("player2", R.drawable.green_player).apply();
                     prefs.edit().putInt("puck", R.drawable.grey_puck).apply();
                 } else if (checkedId == R.id.radio_yellow_purple){
-                    prefs.edit().putString("theme", "yellow and orange").apply();
+                    prefs.edit().putString("theme", "yellow and purple").apply();
                     prefs.edit().putInt("player1", R.drawable.yellow_player).apply();
                     prefs.edit().putInt("player2", R.drawable.purple_player).apply();
                     prefs.edit().putInt("puck", R.drawable.grey_puck).apply();
@@ -157,7 +157,7 @@ public class Settings extends Activity {
                 break;
             case "kitten" : themeGroup.check(R.id.radio_kitten);
                 break;
-            default : themeGroup.check(R.id.radio_orange_blue);
+            default :
                 break;
         }
 
