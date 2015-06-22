@@ -134,7 +134,7 @@
             android:layout_width="126dp"
             android:layout_height="wrap_content"
             android:id="@+id/return_button"
-            android:text="Return"
+            android:text="Return to main menu"
             android:layout_gravity="center_horizontal" />
 
     </LinearLayout>

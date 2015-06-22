@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Canvas;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -51,6 +52,7 @@ public class Game extends Activity implements View.OnTouchListener {
     private Boolean mode;
     private static final String TAG = "Tag-AirHockity";
     private Player[] players;
+    private int round = 1;
     SharedPreferences prefs = null;
     int width;
     int height;
@@ -65,8 +67,6 @@ public class Game extends Activity implements View.OnTouchListener {
         display.getSize(size);
         width = size.x;
         height = size.y;
-        // Set up user interface
-
         mFrame = (ViewGroup) findViewById(R.id.frame);
         mFrame.setOnTouchListener(this);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -74,26 +74,26 @@ public class Game extends Activity implements View.OnTouchListener {
         friction = prefs.getString("friction", null);
         mode = prefs.getBoolean("mode",false);
 
-        mField = new Field(getApplicationContext(),mFrame);
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inScaled = false;
+        mBitmap1 = BitmapFactory.decodeResource(getResources(), prefs.getInt("player1",R.drawable.orange_player), opts);
+        mBitmap2 = BitmapFactory.decodeResource(getResources(), prefs.getInt("player2",R.drawable.blue_player), opts);
+
+        mField = new Field(getApplicationContext(),mFrame,mBitmap1,mBitmap2);
         mFrame.addView(mField);
 
         players = new Player[2];
 
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inScaled = false;
-
         //Player 1
-        int i = prefs.getInt("player1",R.drawable.orange_player);
-        mBitmap1 = BitmapFactory.decodeResource(getResources(), i, opts);
         player1 = new Player("player1",getApplicationContext(), width/2 - 128,128, mBitmap1);
         players[0]=player1;
         mFrame.addView(player1);
 
         //Player 2
-        mBitmap2 = BitmapFactory.decodeResource(getResources(), prefs.getInt("player2",R.drawable.blue_player), opts);
         player2 = new Player("player2", getApplicationContext(), width/2 - 128,height - 3 * 128, mBitmap2);
         players[1]=player2;
         mFrame.addView(player2);
+
         //The puck
         mBitmap3 = BitmapFactory.decodeResource(getResources(), prefs.getInt("puck",R.drawable.grey_puck));
         puck = new Puck(getBaseContext(), (float) width / 2 - 20, (float) height / 2 - 2 * 32 - 10, mBitmap3, mFrame, this,this.friction);
@@ -107,49 +107,66 @@ public class Game extends Activity implements View.OnTouchListener {
     }
 
     public void start() {
+        final MediaPlayer playSoundOnGoal = MediaPlayer.create(getApplicationContext(),R.raw.ongoal);
+        final MediaPlayer playSoundOnWin = MediaPlayer.create(getApplicationContext(),R.raw.cheer);
 
         // Creates a WorkerThread
 
-        ScheduledExecutorService executor = Executors
+        final ScheduledExecutorService executor = Executors
                 .newScheduledThreadPool(1);
 
         executor.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
-
                 puck.move(REFRESH_RATE);
-
                 puck.deaccelerate();
                 puck.postInvalidate();
 
                 if (puck.topGoal()) {
-                    // vibrateOnGoal();
+                    vibrateOnGoal();
+                    playSoundOnGoal.start();
                     mField.setScoreBot(mField.getScoreBot() + 1);
                     resetPuck();
                 }
                 if (puck.botGoal()) {
-                    // vibrateOnGoal();
+                    vibrateOnGoal();
+                    playSoundOnGoal.start();
                     mField.setScoreTop(mField.getScoreTop() + 1);
                     resetPuck();
                 }
                 if (mField.getScoreBot() == pointsToWin) {
+                    playSoundOnWin.start();
                     mField.setBotWins(mField.getBotWins() + 1);
                     if (mode) {
-                        if (mField.getBotWins() == 3) {
-                            createWinnerDialog("Bottom").show();
+                        mField.drawRoundWinner("bot", round);
+                        round++;
+                        mField.resetScore();
+                        resetPuck();
+                        if (mField.getBotWins() == 2) {
+                            showWinnerDialog("Bottom");
+                            executor.shutdown();
+
                         }
                     } else {
-                        createWinnerDialog("Bottom").show();
+                        showWinnerDialog("Bottom");
+                        executor.shutdown();
                     }
                 }
                 if (mField.getScoreTop() == pointsToWin) {
+                    playSoundOnWin.start();
                     mField.setTopWins(mField.getTopWins() + 1);
                     if (mode) {
-                        if (mField.getTopWins() == 3) {
-                            createWinnerDialog("Top").show();
+                        mField.drawRoundWinner("top", round);
+                        round++;
+                        mField.resetScore();
+                        resetPuck();
+                        if (mField.getTopWins() == 2) {
+                            showWinnerDialog("Top");
+                            executor.shutdown();
                         }
                     } else {
-                        createWinnerDialog("Top").show();
+                        showWinnerDialog("Top");
+                        executor.shutdown();
                     }
 
                 }
@@ -161,6 +178,7 @@ public class Game extends Activity implements View.OnTouchListener {
         // Vibrate for 800 milliseconds
         v.vibrate(800);
     }
+
 
     private boolean intersects(float x, float y) {
         for (Player p : players) {
@@ -180,10 +198,11 @@ public class Game extends Activity implements View.OnTouchListener {
         return null;
     }
 
-    private void resetPuck(){
+    private void resetPuck() {
         puck.resetVelocity();
         puck.setX(width / 2 - 20);
         puck.setY(height / 2 - 2 * 32 - 10);
+        mFrame.postInvalidate();
     }
 
 
@@ -279,32 +298,11 @@ public class Game extends Activity implements View.OnTouchListener {
         return builder.create();
     }
 
-    public AlertDialog createWinnerDialog(final String winner) {
-        CharSequence[] choice = new CharSequence[2];
-        choice[0] = "Play Again";
-        choice[1] = "Main Menu";
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(Game.this);
-        builder.setTitle(winner+" wins the game!")
-                .setItems(choice, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            Intent intent = getIntent();
-                            finish();
-                            startActivity(intent);
-                        } else if (which == 1) {
-                            finish();
-                        }
-                    }
-                });
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-            }
-        });
-        return builder.create();
+    public void showWinnerDialog(String winner){
+        DialogFragment mWinnerDialog = WinnerDialog.newInstance(winner);
+        mWinnerDialog.show(getFragmentManager(), "dialog");
     }
+
 
 
 }

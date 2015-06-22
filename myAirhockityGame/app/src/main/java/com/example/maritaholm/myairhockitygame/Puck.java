@@ -81,29 +81,22 @@ public class Puck extends View {
     }
 
     protected void move(int rate) {
-        Log.d(TAG, "(" + xPos + ", " + yPos + ")");
-        Log.d(TAG, "intersectsTop: " + intersectsTop());
         if (intersectsTop()) {
-
             yPos = mFrame.getTop() + 1;
             yVel = yVel * (-1);
         }
 
         if (intersectsBottom()) {
-
-
             yPos = mFrame.getBottom() - (2 * radius + 1);
             yVel = yVel * (-1);
         }
 
         if (intersectsLeft()) {
-
             xPos = mFrame.getLeft() + 1;
             xVel = xVel * (-1);
         }
 
         if (intersectsRight()) {
-
             xPos = mFrame.getRight()-(2 * radius + 1);
             xVel = xVel * (-1);
         }
@@ -169,40 +162,6 @@ public class Puck extends View {
         yVel = yVel * (float) DEACCELATION;
     }
 
-   /* public Vector getNewDirection(Player p) {
 
-        double playerCentrumX = p.getX()+p.getRadius();
-        double playerCentrumY = p.getY()+p.getRadius();
-        double centrumX = xPos + radius;
-        double centrumY = yPos + radius;
-
-        Vector radiusVector = new Vector((( p.getRadius()/(p.getRadius()+radius)) * (playerCentrumX - centrumX)),
-                (( p.getRadius()/(p.getRadius()+radius)) * (playerCentrumY - centrumY)));
-        Log.d(TAG, "radiusVector: " + radiusVector);
-        Vector velVector = new Vector(xVel,yVel);
-        Log.d(TAG, "xVel: " +xVel + " yVel: " + yVel);
-        Log.d(TAG, "velVector: " + velVector);
-
-
-        Vector radiusVectorNormed = new Vector(radiusVector.getX()/radiusVector.length(),
-                radiusVector.getY()/radiusVector.length());
-        Log.d(TAG, "radiusVectorNormed: " + radiusVectorNormed);
-
-        double dotProductVelocityRadius = 2 * dotProduct(velVector,radiusVectorNormed);
-        Log.d(TAG, "dotProductVelocityRadius: " + dotProductVelocityRadius);
-        Vector radiusNormScaled = new Vector(radiusVectorNormed.getX()*dotProductVelocityRadius,
-                radiusVectorNormed.getY()*dotProductVelocityRadius);
-        Log.d(TAG, "radiusNormScaled: " + radiusNormScaled);
-
-
-        Vector newVelocity = new Vector(velVector.getX()-radiusNormScaled.getX(),
-                velVector.getY()-radiusNormScaled.getY());
-        Log.d(TAG, "newVelocity: " + newVelocity);
-
-        newVelocity.norm();
-
-        return newVelocity;
-    }
- */
 
 }

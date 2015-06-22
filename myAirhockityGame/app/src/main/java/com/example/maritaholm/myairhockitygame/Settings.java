@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -30,7 +31,7 @@ public class Settings extends Activity {
         int set = prefs.getInt("points",0);
         String friction = prefs.getString("friction", null);
         String theme = prefs.getString("theme", null);
-
+        final MediaPlayer playSoundButtonTouch = MediaPlayer.create(getApplicationContext(), R.raw.menutouch);
 
         setButtons(pointsGroup,frictionGroup,themeGroup,set,friction,theme);
 
@@ -40,6 +41,7 @@ public class Settings extends Activity {
         defButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playSoundButtonTouch.start();
                 pointsGroup.check(R.id.radio_three);
                 frictionGroup.check(R.id.radio_some);
                 themeGroup.check(R.id.radio_orange_blue);
@@ -106,6 +108,8 @@ public class Settings extends Activity {
         retButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                playSoundButtonTouch.start();
                 finish();
             }
         });
