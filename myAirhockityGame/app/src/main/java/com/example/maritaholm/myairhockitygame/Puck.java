@@ -112,6 +112,7 @@ public class Puck extends View {
         return (((xPos >= ((mFrame.getRight()/2)-100)))&&
                 (xPos+2*radius <= ((mFrame.getRight()/2)+100))&&(yPos <= ((mFrame.getTop()+10))));
     }
+
     protected boolean botGoal(){
         return (((xPos >= ((mFrame.getRight()/2)-100)))&&
                 (xPos+2*radius <= ((mFrame.getRight()/2)+100))&&(yPos+2*radius >= ((mFrame.getBottom()-10))));

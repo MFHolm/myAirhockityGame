@@ -20,8 +20,8 @@ import android.widget.RadioGroup;
 public class Settings extends Activity {
 
     private static final String TAG = "Tag-AirHockity";
-
     SharedPreferences prefs = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,25 +37,29 @@ public class Settings extends Activity {
 
         setButtons(pointsGroup,frictionGroup,themeGroup,set,friction,theme);
 
-        Log.d(TAG, theme);
-
         Button defButton = (Button) findViewById(R.id.default_button);
         Button retButton = (Button) findViewById(R.id.return_button);
 
+        // Resets preferences
         defButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Checks toggle buttons
                 playSoundButtonTouch.start();
                 pointsGroup.check(R.id.radio_three);
                 frictionGroup.check(R.id.radio_some);
                 themeGroup.check(R.id.radio_orange_blue);
 
+                // Updates pref with the default values
                 prefs.edit().putInt("player1", R.drawable.orange_player).apply();
                 prefs.edit().putInt("player2", R.drawable.blue_player).apply();
                 prefs.edit().putInt("puck", R.drawable.grey_puck).apply();
             }
         });
 
+
+        // Check if user updates points needed to win, the amount of friction or chooses another theme
+        // Saves chosen preferences to a PreferenceManager prefs
         pointsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -109,6 +113,7 @@ public class Settings extends Activity {
             }
         });
 
+        // Returns to main menu
         retButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,10 +122,10 @@ public class Settings extends Activity {
                 finish();
             }
         });
-
-
-
     }
+
+    // Updates which radio button is checked
+    // Gets which button is selected from prefs
     public void setButtons(RadioGroup pointsGroup,RadioGroup frictionGroup, RadioGroup themeGroup,
                            int set,String friction, String theme){
         if(set == 3){
@@ -143,6 +148,7 @@ public class Settings extends Activity {
         }
         Log.d(TAG, "in switch: " + theme);
 
+
         switch (theme) {
             case "orange and blue" : themeGroup.check(R.id.radio_orange_blue);
                 break;
@@ -155,8 +161,5 @@ public class Settings extends Activity {
             default : themeGroup.check(R.id.radio_orange_blue);
                 break;
         }
-
-
     }
-
 }

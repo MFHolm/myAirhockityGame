@@ -11,6 +11,8 @@ import android.os.Bundle;
 /**
  * Created by MThomsen on 22-06-2015.
  */
+
+// Creates a pop up which displays the winner of the game
 public class WinnerDialog extends DialogFragment {
     public static WinnerDialog newInstance(String winner){
         WinnerDialog wd = new WinnerDialog();
@@ -20,11 +22,9 @@ public class WinnerDialog extends DialogFragment {
         return wd;
     }
 
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
         String winner = getArguments().getString("winner");
-
 
         Dialog AD = new AlertDialog.Builder(getActivity())
                 .setTitle("The winner is " + winner + "!")
@@ -34,7 +34,6 @@ public class WinnerDialog extends DialogFragment {
                                 getActivity().finish();
                             }
                         }
-
                 )
 
                 .setNegativeButton("Play again!",

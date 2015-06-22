@@ -17,17 +17,18 @@ import android.widget.Button;
 
 
 public class MainMenu extends Activity {
-
-    private int points = 3;
-    static final int SETTINGS_REQUEST = 1;
     SharedPreferences prefs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Sets up shared preferences and puts in default setting values.
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         final MediaPlayer playSoundButtonTouch = MediaPlayer.create(getApplicationContext(),R.raw.menutouch);
+
+        //Sets up buttons.
         final Button startButton = (Button) findViewById(R.id.quickgamebutton);
         final Button outof3Button = (Button) findViewById(R.id.outof3button);
         final Button settingsButton = (Button) findViewById(R.id.settingsbutton);
@@ -47,6 +48,7 @@ public class MainMenu extends Activity {
             @Override
             public void onClick(View v) {
                 playSoundButtonTouch.start();
+                //Sets the bestOutOf3 mode to true to identify that a best out of 3 game is started.
                 prefs.edit().putBoolean("bestOutOf3", true).commit();
                 Intent outof3Game = new Intent(MainMenu.this, Game.class);
                 startActivity(outof3Game);
@@ -58,12 +60,14 @@ public class MainMenu extends Activity {
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //For starting settings.
                 Intent settings = new Intent(MainMenu.this,Settings.class);
                 playSoundButtonTouch.start();
                 startActivity(settings);
             }
         });
 
+        //Quit game.
         quitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
