@@ -24,7 +24,7 @@ import android.os.Bundle;
 
         Dialog AD = new AlertDialog.Builder(getActivity())
                 .setTitle("The winner is " + winner + "!")
-                .setPositiveButton("Return to main menu!",
+                .setPositiveButton("Return to main menu",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 getActivity().finish();
@@ -32,7 +32,7 @@ import android.os.Bundle;
                         }
                 )
 
-                .setNegativeButton("Play again!",
+                .setNegativeButton("Play again",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 Intent intent = getActivity().getIntent();

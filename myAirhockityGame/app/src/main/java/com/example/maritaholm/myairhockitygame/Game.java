@@ -37,8 +37,8 @@ public class Game extends Activity implements View.OnTouchListener {
     private Field mField;
     private Puck puck;
     private static final int REFRESH_RATE = 40;
-    private int PLAYER_RADIUS;
-    private int PUCK_RADIUS;
+    private int playerRadius;
+    private int puckRadius;
     //Game settings
     private int pointsToWin;
     private String friction;
@@ -49,13 +49,13 @@ public class Game extends Activity implements View.OnTouchListener {
     //True for best out of 3, otherwise false
     private Boolean bestOutOf3;
     private Player[] players;
-    SharedPreferences prefs = null;
+    private SharedPreferences prefs = null;
     int width;
     int height;
     private boolean pause;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //Set up view
@@ -88,23 +88,23 @@ public class Game extends Activity implements View.OnTouchListener {
 
         players = new Player[2];
 
-        PLAYER_RADIUS = width/10;
-        PUCK_RADIUS = width/30;
+        playerRadius = width/10;
+        puckRadius = width/30;
 
         //Player 1
-        player1 = new Player("player1",getApplicationContext(), width/2 - PLAYER_RADIUS,PLAYER_RADIUS, player1Bitmap, PLAYER_RADIUS);
+        player1 = new Player("player1",getApplicationContext(), width/2 - playerRadius, playerRadius, player1Bitmap, playerRadius);
         players[0]=player1;
         mFrame.addView(player1);
 
         //Player 2
-        player2 = new Player("player2", getApplicationContext(), width/2 - PLAYER_RADIUS,height - 3 * PLAYER_RADIUS, player2Bitmap,PLAYER_RADIUS);
+        player2 = new Player("player2", getApplicationContext(), width/2 - playerRadius,height - 3 * playerRadius, player2Bitmap, playerRadius);
         players[1]=player2;
         mFrame.addView(player2);
 
         //The puck
         puckBitmap = BitmapFactory.decodeResource(getResources(), prefs.getInt("puck",R.drawable.grey_puck));
-        puck = new Puck(getBaseContext(), (float) width / 2 - PUCK_RADIUS/2,
-                (float) height / 2 - 2* PUCK_RADIUS, puckBitmap, mFrame,this.friction, PUCK_RADIUS);
+        puck = new Puck(getBaseContext(), (float) width / 2 - puckRadius /2,
+                (float) height / 2 - 2* puckRadius, puckBitmap, mFrame,this.friction, puckRadius);
         mFrame.addView(puck);
         start();
 
@@ -227,8 +227,8 @@ public class Game extends Activity implements View.OnTouchListener {
     //Resets puck position
     private void resetPuck() {
         puck.resetVelocity();
-        puck.setX(width / 2 - PUCK_RADIUS / 2);
-        puck.setY(height / 2 - 2 * PUCK_RADIUS);
+        puck.setX(width / 2 - puckRadius / 2);
+        puck.setY(height / 2 - 2 * puckRadius);
         mFrame.postInvalidate();
     }
 
@@ -289,7 +289,7 @@ public class Game extends Activity implements View.OnTouchListener {
         createPauseDialog().show();
     }
 
-    public Dialog createPauseDialog() {
+    protected Dialog createPauseDialog() {
         //Sets up the two button titles
         CharSequence[] choices = new CharSequence[2];
         choices[0] = "Resume";
@@ -315,6 +315,7 @@ public class Game extends Activity implements View.OnTouchListener {
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
+                pause = false;
             }
         });
         return builder.create();
@@ -326,9 +327,8 @@ public class Game extends Activity implements View.OnTouchListener {
         pause = true;
     }
 
-
     //Show winner dialog
-    public void showWinnerDialog(String winner){
+    private void showWinnerDialog(String winner){
         DialogFragment mWinnerDialog = WinnerDialog.newInstance(winner);
         mWinnerDialog.show(getFragmentManager(), "dialog");
     }

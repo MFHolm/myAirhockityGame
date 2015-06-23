@@ -46,7 +46,6 @@ public class MainMenu extends Activity {
         outOf3Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playSoundButtonTouch.start();
                 //Sets the bestOutOf3 mode to true to identify that a best out of 3 game is started
                 prefs.edit().putBoolean("bestOutOf3", true).apply();
                 if (prefs.getBoolean("sound",true)){
@@ -77,11 +76,5 @@ public class MainMenu extends Activity {
                 finish();
             }
         });
-
     }
-
-
-
-
-
 }
