@@ -82,26 +82,26 @@ public class Field extends View {
 
     }
 
-    public void setScoreTop(int s){
+    protected void setScoreTop(int s){
         this.scoreTop=s;
         this.postInvalidate();
     }
 
-    public void setScoreBot(int s){
+    protected void setScoreBot(int s){
         this.scoreBot=s;
         this.postInvalidate();
     }
 
-    public int getScoreTop(){
+    protected int getScoreTop(){
         return this.scoreTop;
     }
 
-    public int getScoreBot(){
+    protected int getScoreBot(){
         return this.scoreBot;
     }
 
     //Sets the bitmap corresponding to the given winner
-    public void drawRoundWinner(String winner, int round){
+    protected void drawRoundWinner(String winner, int round){
         if(winner.equals("top")){
             winners[round-1] = Bitmap.createScaledBitmap(player1,25,25,false);
         } else {
@@ -111,25 +111,25 @@ public class Field extends View {
 
     }
 
-    public void resetScore(){
+    protected void resetScore(){
         this.scoreBot = 0;
         this.scoreTop = 0;
 
     }
 
-    public int getTopWins() {
+    protected int getTopWins() {
         return topWins;
     }
 
-    public void setTopWins(int topWins) {
+    protected void setTopWins(int topWins) {
         this.topWins = topWins;
     }
 
-    public int getBotWins() {
+    protected int getBotWins() {
         return botWins;
     }
 
-    public void setBotWins(int botWins) {
+    protected void setBotWins(int botWins) {
         this.botWins = botWins;
     }
 }

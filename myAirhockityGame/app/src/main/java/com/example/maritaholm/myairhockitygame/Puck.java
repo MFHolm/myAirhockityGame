@@ -3,12 +3,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.View;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Puck extends View {
     private final Paint mPainter = new Paint();
@@ -16,15 +11,15 @@ public class Puck extends View {
     private float yPos;
     private float xVel;
     private float yVel;
-    private float radius;
+    private int radius;
     private Bitmap mScaledBitmap;
     private static final String TAG = "Tag-AirHockity"; //TODO
     private View mFrame;
     // Sets default acceleration to some resistance
-    private double DEACCELATION = 0.975;
+    private double DECELATION = 0.975;
 
 
-    public Puck(Context context, float x, float y, Bitmap bitmap, View frame,String friction, int radius) {
+    public Puck(Context context, float x, float y, Bitmap bitmap, View frame, String friction, int radius) {
         super(context);
         this.xPos = x;
         this.yPos = y;
@@ -32,13 +27,13 @@ public class Puck extends View {
         this.yVel = 0;
         this.radius = radius;
         this.mFrame = frame;
-        this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2 * (int)radius, 2 * (int)radius, false);
+        this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2 * radius, 2 * radius, false);
         if(friction.equals("none")){
-            DEACCELATION = 1;
+            DECELATION = 1;
         } else if(friction.equals("some")){
-            DEACCELATION = 0.975;
+            DECELATION = 0.975;
         } else {
-            DEACCELATION = 0.875;
+            DECELATION = 0.875;
         }
     }
     @Override
@@ -47,31 +42,32 @@ public class Puck extends View {
     }
 
     // Methods to manipulate and get info about the puck
-    public float getRadius() {
+    protected float getRadius() {
         return radius;
     }
+
     public float getX() {
         return xPos;
     }
+
     public float getY() {
         return yPos;
     }
 
-    public void setX(float x){this.xPos=x;}
-    public void setY(float y){this.yPos=y;}
-    public float getXVel() {return xVel; }
-    public float getYVel() {return yVel; }
-    public void IncreaseVelocity(float x, float y) {
+    public void setX(float x){
+        this.xPos=x;
+    }
+
+    public void setY(float y){
+        this.yPos=y;
+    }
+
+    protected void IncreaseVelocity(float x, float y) {
         xVel += x;
         yVel += y;
     }
 
-    public void setVelocity(float x, float y) {
-        xVel = x;
-        yVel = y;
-    }
-
-    public void resetVelocity(){
+    protected void resetVelocity(){
         xVel = 0;
         yVel = 0;
     }
@@ -117,10 +113,11 @@ public class Puck extends View {
 
 
     // Returns true if puck is outside the game frame
-    private boolean intersectsLeft() {
+    protected boolean intersectsLeft() {
         return (xPos <= mFrame.getLeft());
     }
-    private boolean intersectsRight() {
+
+    protected boolean intersectsRight() {
         //Only check if intersects bottom if mFrame has gotten its dimensions
         if (mFrame.getRight() > 0) {
             return (xPos + 2 * radius >= mFrame.getRight());
@@ -143,9 +140,9 @@ public class Puck extends View {
 
 
     // Applies the chosen degree of acceleration
-    public void deaccelerate() {
-        xVel = xVel * (float) DEACCELATION;
-        yVel = yVel * (float) DEACCELATION;
+    protected void decelerate() {
+        xVel = xVel * (float) DECELATION;
+        yVel = yVel * (float) DECELATION;
     }
 
 

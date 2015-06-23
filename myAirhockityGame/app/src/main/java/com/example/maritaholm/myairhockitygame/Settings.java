@@ -1,22 +1,19 @@
 package com.example.maritaholm.myairhockitygame;
 
 import android.app.Activity;
-
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 
+/* Handles all settings in the game
+ */
 
 public class Settings extends Activity {
 
-    SharedPreferences prefs = null;
+    private SharedPreferences prefs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +139,7 @@ public class Settings extends Activity {
 
     // Selects radiobuttons depending on already defined settings
     // Gets which button is selected from prefs
-    public void setButtons(RadioGroup soundGroup,RadioGroup pointsGroup,RadioGroup frictionGroup, RadioGroup themeGroup,
+    private void setButtons(RadioGroup soundGroup,RadioGroup pointsGroup,RadioGroup frictionGroup, RadioGroup themeGroup,
                            int set,String friction, String theme, Boolean isSoundOn){
         if (isSoundOn){
             soundGroup.check(R.id.sound_on);

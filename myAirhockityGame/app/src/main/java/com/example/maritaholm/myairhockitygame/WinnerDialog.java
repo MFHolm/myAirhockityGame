@@ -4,13 +4,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.Bundle;
 
 
-// Creates a pop up which displays the winner of the game
-public class WinnerDialog extends DialogFragment {
+    // Creates a pop up which displays the winner of the game
+    public class WinnerDialog extends DialogFragment {
     public static WinnerDialog newInstance(String winner){
         WinnerDialog wd = new WinnerDialog();
         Bundle info = new Bundle();

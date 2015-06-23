@@ -23,12 +23,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/* The Game activity controls the game itself and handles user inputs
+ */
+
 public class Game extends Activity implements View.OnTouchListener {
 
     private ViewGroup mFrame;
-    private Bitmap mBitmap1;
-    private Bitmap mBitmap2;
-    private Bitmap mBitmap3;
+    private Bitmap player1Bitmap;
+    private Bitmap player2Bitmap;
+    private Bitmap puckBitmap;
     private Player player1;
     private Player player2;
     private Field mField;
@@ -40,21 +43,16 @@ public class Game extends Activity implements View.OnTouchListener {
     private int pointsToWin;
     private String friction;
     private int round = 1;
-
     // Creates a WorkerThread
     private ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    
     public boolean isSoundEnabled;
-    private Boolean mode;
-
     //True for best out of 3, otherwise false
     private Boolean bestOutOf3;
     private Player[] players;
-
     SharedPreferences prefs = null;
-
     int width;
     int height;
+    private boolean pause;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,10 +80,10 @@ public class Game extends Activity implements View.OnTouchListener {
         //Set up bitmaps to display players
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inScaled = false;
-        mBitmap1 = BitmapFactory.decodeResource(getResources(), prefs.getInt("player1",R.drawable.orange_player), opts);
-        mBitmap2 = BitmapFactory.decodeResource(getResources(), prefs.getInt("player2",R.drawable.blue_player), opts);
+        player1Bitmap = BitmapFactory.decodeResource(getResources(), prefs.getInt("player1",R.drawable.orange_player), opts);
+        player2Bitmap = BitmapFactory.decodeResource(getResources(), prefs.getInt("player2",R.drawable.blue_player), opts);
 
-        mField = new Field(getApplicationContext(),mFrame,mBitmap1,mBitmap2);
+        mField = new Field(getApplicationContext(),mFrame, player1Bitmap, player2Bitmap);
         mFrame.addView(mField);
 
         players = new Player[2];
@@ -94,19 +92,19 @@ public class Game extends Activity implements View.OnTouchListener {
         PUCK_RADIUS = width/30;
 
         //Player 1
-        player1 = new Player("player1",getApplicationContext(), width/2 - PLAYER_RADIUS,PLAYER_RADIUS, mBitmap1, PLAYER_RADIUS);
+        player1 = new Player("player1",getApplicationContext(), width/2 - PLAYER_RADIUS,PLAYER_RADIUS, player1Bitmap, PLAYER_RADIUS);
         players[0]=player1;
         mFrame.addView(player1);
 
         //Player 2
-        player2 = new Player("player2", getApplicationContext(), width/2 - PLAYER_RADIUS,height - 3 * PLAYER_RADIUS, mBitmap2,PLAYER_RADIUS);
+        player2 = new Player("player2", getApplicationContext(), width/2 - PLAYER_RADIUS,height - 3 * PLAYER_RADIUS, player2Bitmap,PLAYER_RADIUS);
         players[1]=player2;
         mFrame.addView(player2);
 
         //The puck
-        mBitmap3 = BitmapFactory.decodeResource(getResources(), prefs.getInt("puck",R.drawable.grey_puck));
+        puckBitmap = BitmapFactory.decodeResource(getResources(), prefs.getInt("puck",R.drawable.grey_puck));
         puck = new Puck(getBaseContext(), (float) width / 2 - PUCK_RADIUS/2,
-                (float) height / 2 - 2* PUCK_RADIUS, mBitmap3, mFrame,this.friction, PUCK_RADIUS);
+                (float) height / 2 - 2* PUCK_RADIUS, puckBitmap, mFrame,this.friction, PUCK_RADIUS);
         mFrame.addView(puck);
         start();
 
@@ -114,6 +112,10 @@ public class Game extends Activity implements View.OnTouchListener {
     @Override
     protected void onResume() {
         super.onResume();
+        //If game is paused show the pause dialog
+        if (pause) {
+            createPauseDialog().show();
+        }
     }
 
     public void start() {
@@ -123,17 +125,22 @@ public class Game extends Activity implements View.OnTouchListener {
 
 
         executor.scheduleWithFixedDelay(new Runnable() {
+
             @Override
             public void run() {
+                //if game is paused return
+                if (pause) {
+                    return;
+                }
                 //Moving the puck
                 puck.move(REFRESH_RATE);
-                puck.deaccelerate();
+                puck.decelerate();
                 puck.postInvalidate();
 
 
                 //Logic for incrementing goal score and determining game winner
                 if (puck.topGoal()) {
-                    if (isSoundEnabled){
+                    if (isSoundEnabled) {
                         vibrateOnGoal();
                         playSoundOnGoal.start();
                     }
@@ -141,7 +148,7 @@ public class Game extends Activity implements View.OnTouchListener {
                     resetPuck();
                 }
                 if (puck.botGoal()) {
-                    if (isSoundEnabled){
+                    if (isSoundEnabled) {
                         vibrateOnGoal();
                         playSoundOnGoal.start();
                     }
@@ -149,45 +156,44 @@ public class Game extends Activity implements View.OnTouchListener {
                     resetPuck();
                 }
                 if (mField.getScoreBot() == pointsToWin) {
-                    if (isSoundEnabled){
+                    if (isSoundEnabled) {
                         playSoundOnWin.start();
                     }
 
                     mField.setBotWins(mField.getBotWins() + 1);
-                    if (bestOutOf3) {
+                    if (bestOutOf3 && !(mField.getBotWins() >= 2)) {
                         mField.drawRoundWinner("bot", round);
                         round++;
                         mField.resetScore();
                         resetPuck();
-                        if (mField.getBotWins() == 2) {
+                        /*if (mField.getBotWins() == 2) {
                             showWinnerDialog("Bottom");
                             executor.shutdown();
 
-                        }
+                        }*/
                     } else {
                         showWinnerDialog("Bottom");
                         executor.shutdown();
                     }
                 }
                 if (mField.getScoreTop() == pointsToWin) {
-                    if (isSoundEnabled){
+                    if (isSoundEnabled) {
                         playSoundOnWin.start();
                     }
                     mField.setTopWins(mField.getTopWins() + 1);
-                    if (bestOutOf3) {
+                    if (bestOutOf3 && !(mField.getTopWins() == 2)) {
                         mField.drawRoundWinner("top", round);
                         round++;
                         mField.resetScore();
                         resetPuck();
-                        if (mField.getTopWins() == 2) {
+                        /*if (mField.getTopWins() == 2) {
                             showWinnerDialog("Top");
                             executor.shutdown();
-                        }
+                        }*/
                     } else {
                         showWinnerDialog("Top");
                         executor.shutdown();
                     }
-
                 }
             }
         }, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);
@@ -221,8 +227,8 @@ public class Game extends Activity implements View.OnTouchListener {
     //Resets puck position
     private void resetPuck() {
         puck.resetVelocity();
-        puck.setX(width / 2 - 20);
-        puck.setY(height / 2 - 2 * 32 - 10);
+        puck.setX(width / 2 - PUCK_RADIUS / 2);
+        puck.setY(height / 2 - 2 * PUCK_RADIUS);
         mFrame.postInvalidate();
     }
 
@@ -280,19 +286,17 @@ public class Game extends Activity implements View.OnTouchListener {
     //Creates a dialog if the back button is pressed
     @Override
     public void onBackPressed() {
-        createDialog(puck.getXVel(),puck.getYVel()).show();
-
+        createPauseDialog().show();
     }
 
-    public Dialog createDialog(final float tempXVel, final float tempYVel) {
-
-        //Pauses the game by settings puck velocity to 0
-        puck.setVelocity(0,0);
-
+    public Dialog createPauseDialog() {
         //Sets up the two button titles
         CharSequence[] choices = new CharSequence[2];
         choices[0] = "Resume";
         choices[1] = "Main Menu";
+
+        //Pauses the game
+        pause = true;
 
         //Set up dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(Game.this);
@@ -303,7 +307,7 @@ public class Game extends Activity implements View.OnTouchListener {
                         if (which == 1) {
                             finish();
                         } else if (which == 0) {
-                            puck.setVelocity(tempXVel, tempYVel);
+                            pause = false;
                         }
                     }
                 });
@@ -311,17 +315,17 @@ public class Game extends Activity implements View.OnTouchListener {
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                puck.setVelocity(tempXVel, tempYVel);
             }
         });
         return builder.create();
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        executor.shutdown();
+    public void onPause() {
+        super.onPause();
+        pause = true;
     }
+
 
     //Show winner dialog
     public void showWinnerDialog(String winner){

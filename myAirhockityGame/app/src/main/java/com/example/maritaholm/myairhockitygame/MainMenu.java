@@ -3,21 +3,15 @@ package com.example.maritaholm.myairhockitygame;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 
 public class MainMenu extends Activity {
-    SharedPreferences prefs = null;
+    private SharedPreferences prefs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +34,7 @@ public class MainMenu extends Activity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                prefs.edit().putBoolean("bestOutOf3", false).apply();
                 if (prefs.getBoolean("sound",true)){
                     playSoundButtonTouch.start();
                 }
@@ -54,16 +49,11 @@ public class MainMenu extends Activity {
                 playSoundButtonTouch.start();
                 //Sets the bestOutOf3 mode to true to identify that a best out of 3 game is started
                 prefs.edit().putBoolean("bestOutOf3", true).apply();
-                Intent outOf3Game = new Intent(MainMenu.this, Game.class);
-                startActivity(outOf3Game);
-                //Sets the bestOutOf3 mode to true to identify that a best out of 3 game is started.
-                prefs.edit().putBoolean("bestOutOf3", true).commit();
                 if (prefs.getBoolean("sound",true)){
                     playSoundButtonTouch.start();
                 }
-                Intent outof3Game = new Intent(MainMenu.this, Game.class);
-                startActivity(outof3Game);
-
+                Intent outOf3Game = new Intent(MainMenu.this, Game.class);
+                startActivity(outOf3Game);
 
             }
         });
